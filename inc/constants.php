@@ -1,8 +1,7 @@
 <?php
 	error_reporting(E_ALL);
 	ini_set('display_errors', 1);
-
-	define("ENV",				"DEVELOPMENT");//"DEVELOPMENT" / "STAGING" / "PRODUCTION"
+	define("ENV",				"PRODUCTION");//"DEVELOPMENT" / "STAGING" / "PRODUCTION"
 	define("SEP",				"/");
 	define("HOST_PATH",			$_SERVER['HTTP_HOST'].SEP);
 	define("CMS_PATH",			"http://".HOST_PATH);
