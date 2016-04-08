@@ -687,8 +687,7 @@ switch ($request_method){
 			
 			$email_string = http_build_query($email);
 			$sms ="Your clinic is sucessfully registered with us. Username:".$params['form']['email']." Password:".$params['form']['password'];
- 			echo "ok";
- 			ob_clean();
+
  			curl_mail($email_string);
  			SendSMS($params['form']['mobile_no_1'], $sms);
 			break;
@@ -1030,7 +1029,7 @@ function role(){
 		$param['Password'] = "Pass@word1";
 		$param['Mask'] = "MASTRO";
 		 
-		$param[Type] = "Individual"; //Can be "Bulk/Group”
+		$param['Type'] = "Individual"; //Can be "Bulk/Group”
 		//We need to URL encode the values
 		foreach($param as $key=>$val)
 		{
