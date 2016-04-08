@@ -1,0 +1,150 @@
+<div class='row'>
+  <div class='col-sm-7'>
+    <div class='box bordered-box red-border' style='margin-bottom:0;'>
+      <div class='box-header red-background'>
+        <div class='title'>Patients List</div>
+      </div>
+      <div class='box-content box-no-padding'>
+        <div class='responsive-table'>
+          <div class='scrollable-area'>
+            <table class='table table-hover table-striped' style='margin-bottom:0;'>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                  <th>Address</th>                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="p in patients track by $index">
+                  <td><input data-rule-required="true" id="patient_id" name="patient_id" type="radio" ng-click="patient_selected($index,p.patient_id)"></td>
+                  <td>{{p.name}}</td>
+                  <td>{{p.mobile_no_1}}</td>
+                  <td>{{p.email_1}}</td>
+                  <td>{{p.address}}</td>                  
+                </tr>
+              </tbody>
+            </table>    
+          </div>
+        </div>
+      </div>
+    </div>    
+  </div>
+  <div class='col-sm-5'>
+    <div class='box bordered-box red-border' style='margin-bottom:0;'>
+      <div class='box-header red-background'>
+        <div class='title'>Todays Appointments</div>
+      </div>
+      <div class='box-content box-no-padding'>
+        <div class='responsive-table'>
+          <div class='scrollable-area'>
+            <table class='table table-hover table-striped' style='margin-bottom:0;'>
+              <thead>
+                <tr>
+                  <td colspan="2">
+                    <div class='input-group date pull-left' id='datetimepicker1'>
+                        <input type='text' placeholder="Select Appointment Date" class="form-control" ng-model="appointment_date" id="appointment_date"/>
+                        <span class="input-group-addon">
+                            <span class="fa fa-calendar">
+                            </span>
+                        </span>
+                    </div>
+                    <button class="btn btn-info pull-left" ng-click="get_appointments()"><i class='icon-search'>Search</i></button>                   
+                  </td>
+                  </tr>
+                  <tr>
+                  <td colspan="2">
+                    <select class="form-control" ng-model="appointment_selected_doctor" ng-options="x.id as x.name for x in appointment_doctors"></select>
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    Slot
+                  </th>
+                  <th>
+                    Appointments
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Patient</th>
+                  <th>Arrive/Cancel/Manage</th>
+                </tr>
+                <tr ng-repeat = "slot in appointment_slots">
+                  <th colspan="1">
+                    {{slot.slot_name}}
+                  </th>
+                  <td>
+                    <table style="width:100%">
+                      <tr ng-repeat = "s in slot.appointments"  ng-if="appointment_selected_doctor==s.doctor_id">
+                        <span>
+                        <td style="width:100%">
+                        {{s.patient_name}}(Age:{{s.age}})
+                          <div class="clearfix">
+                            <div class='text-left pull-left'>    
+                                <span ng-if="s.patient_arrived!=1&&s.cancel!=1">
+                                  <input type="text" size="3" placeholder="weight" id="weight_{{s.id}}">
+                                  <button class='btn btn-success btn-xs' ng-click='arrive(s.id)'>
+                                    <i class='icon-ok'></i>
+                                  </button>
+                                  <button class='btn btn-danger btn-xs' ng-click='cancel(s.id)'>
+                                    <i class='icon-remove'></i>
+                                  </button>                              
+                                </span>
+                                <span ng-if="s.cancel==1">
+                                Cancelled
+                                </span>
+                                <span ng-if="s.patient_arrived==1">
+                                  <a class='btn btn-success btn-xs' ng-href='#manage?aid={{s.id}}'>
+                                    <i class='icon-search'></i>
+                                  </a>                              
+                                </span>
+                              
+                            </div>
+                            <div style="font-size: 12px;" class="text-right pull-right"><i style="color:blue">{{s.doctor_name}}<b>{{s.slot_text}}</b></i></div>                            
+                          </div>
+                        </td>
+                        </span>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class='modal fade' id='patient_selected_model' tabindex='-1'>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <button aria-hidden='true' class='close' data-dismiss='modal' type='button'>×</button>
+        <h4 class='modal-title' id='myModalLabel'>Please Select One Of The Following</h4>
+      </div>
+      <div class='modal-body'>
+          <div class="col-sm-3" ng-repeat="action in patient_actions">
+            <div class="box-quick-link red-background">
+              <a onclick="$('#patient_selected_model').modal('hide');" href="{{action.link}}">
+                <div class="header">
+                  <div class="icon-inbox"></div>
+                </div>
+                <div class="content">{{action.name}}</div>
+              </a>
+            </div>
+          </div>                     
+
+      </div>
+      <div class='modal-footer' style="visibility:hidden">
+        <button class='btn btn-default' data-dismiss='modal' type='button'>Close</button>
+        <button class='btn btn-primary' type='button'>Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

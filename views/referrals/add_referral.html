@@ -1,0 +1,115 @@
+<div class='row'>
+<div class='col-sm-12'>
+  <div class='box bordered-box blue-border'>
+    <div class='box-header blue-background'>
+      <div class='title'>
+        <i class='icon-circle'></i>
+        Add New Referral
+      </div>
+    </div>
+    <div class='box-content box-double-padding'>
+      <form class='form' style='margin-bottom: 0;' name='myForm'>
+        <fieldset>
+          <div class='col-sm-6'>
+
+
+            <div class='form-group'>
+              <label>Clinic Name</label>
+              <input class="form-control" id='clinic_name' ng-model='referral.clinic_name' type="text">
+            </div>
+
+            <div class='form-group'>
+              <label>Doctor First Name</label>
+              <input class="form-control" id='first_name' ng-model='referral.first_name' type="text">
+            </div>
+            <div class='form-group'>
+              <label>Doctor Middle Name</label>
+              <input class="form-control" id='middle_name' ng-model='referral.middle_name' type="text">
+            </div>
+            <div class='form-group'>
+              <label>Doctor Last Name</label>
+              <input class="form-control" id='last_name' ng-model='referral.last_name' type="text">
+            </div>
+            <div class='form-group'>
+              <label>Mobile No</label>
+              <input class="form-control" placeholder="+91 9673173727" id="mobile_no_1" name="mobile_no_1" ng-model="referral.mobile_no_1" type="text" required  ng-pattern="validate_mobile_no">
+              <span style="color:red" ng-if="myForm.mobile_no_1.$error.required">Mobile Number Is Mandatory</span>
+              <span style="color:red" ng-if="myForm.mobile_no_1.$error.pattern"><br>Invalid Mobile No</span>
+            </div>
+            <div class='form-group'>
+              <label>Mobile No 2</label>
+              <input class="form-control" placeholder="+91 9673173727" id="mobile_no_2" name="mobile_no_2" ng-model="referral.mobile_no_2" type="text"  ng-pattern="validate_mobile_no">
+              <span style="color:red" ng-if="myForm.mobile_no_2.$error.pattern"><br>Invalid Mobile No</span>
+            </div>
+
+
+            <div class='form-group'>
+              <label>Email 1</label>
+              <input class="form-control" data-rule-email="true" data-rule-required="true" id="email_1" name="email_1" ng-model="referral.email_1" placeholder="E-mail 1" type="text">
+            </div>
+
+
+          </div>
+
+
+          <div class='col-sm-6'>
+            <div class='form-group'>
+              <label>Country</label>
+              <select  class="select2 form-control" id="country_id" ng-model="referral.country_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in countries" value="{{option.id}}" ng-selected="{{option.id == referral.country_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>State</label>
+              <select  class="select2 form-control" id="state_id" ng-model="referral.state_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in states" value="{{option.id}}" ng-selected="{{option.id == referral.state_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>City</label>
+              <select  class="select2 form-control" id="city_id" ng-model="referral.city_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in cities" value="{{option.id}}" ng-selected="{{option.id == referral.city_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>Area</label>
+              <select  class="select2 form-control" id="area_id" ng-model="referral.area_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in areas" value="{{option.id}}" ng-selected="{{option.id == referral.area_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>Address</label>
+              <textarea rows="1" id="address" ng-model="referral.address" class="autosize form-control" placeholder="Address" style="overflow: hidden; word-wrap: break-word; resize: horizontal;"></textarea>
+            </div>
+
+            <div class='form-group'>
+              <label>Specialties</label>
+              <select  class="select2 form-control" id="specialties" ng-model="selected_specialties" multiple>
+              <option value="">Choose...</option>
+              <option ng-repeat="option in specialties" value="{{option.id}}" ng-selected="check_if_specialty_selected(option.id)">{{option.name}}</option>
+              </select>
+            </div>
+
+        </fieldset>
+
+        <div class='form-actions'>
+          <div class='row'>
+            <div class='col-sm-7 col-sm-offset-5'>
+              <div class='btn btn-primary btn-lg' id="save" ng-click="save()">
+                <i class='icon-save'></i>
+                Save
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+

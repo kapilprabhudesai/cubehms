@@ -1,0 +1,22 @@
+<a href="#/add_referral" class="btn btn-success">Add Referral</a>
+<table class="table table-responsive">
+	<tr>
+		<th>Master ID</th>
+		<th>Name</th>
+		<th>Email</th>
+		<th>Mobile 1</th>
+		<th>Mobile 2</th>
+		<th>Options</th>
+	</tr>
+
+	<tr ng-repeat="ref in referrals">
+		<td>{{ref.id}}</td>
+		<td>{{ref.clinic_name}}({{ref.first_name}} {{ref.last_name}} )</td>
+		<td>{{ref.email_1}}</td>
+		<td>{{ref.mobile_no_1}}</td>
+		<td>{{ref.mobile_no_2}}</td>
+		<td>
+		<a href="#add_referral?id={{ref.id}}">Edit</a>
+		</td>
+	</tr>
+</table>

@@ -1,0 +1,77 @@
+<div class='row'>
+<div class='col-sm-12'>
+  <div class='box bordered-box blue-border'>
+    <div class='box-header blue-background'>
+      <div class='title'>
+        <i class='icon-circle'></i>
+        Issue Fitness
+      </div>
+    </div>
+    <div class='box-content box-double-padding'>
+      <form class='form' style='margin-bottom: 0;' name='myForm'>
+        <fieldset>
+          <div class='col-sm-6'>
+
+
+            <div class='form-group'>
+              <label>Patient Name</label>
+              <input class="form-control" id='clinic_name' ng-model='fitness.name' type="text">
+            </div>
+
+            <div class='form-group'>
+              <label>Illness</label>
+              <input class="form-control" id='first_name' ng-model='fitness.illness' type="text">
+            </div>
+            <div class='form-group'>
+              <label>Unfit From</label>
+              <div class='input-group date' id='datetimepicker1'>
+                  <input type='text' class="form-control" ng-model="fitness.frm" id="from"/>
+                  <span class="input-group-addon">
+                      <span class="fa fa-calendar">
+                      </span>
+                  </span>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label>Unfit Till</label>
+              <div class='input-group date' id='datetimepicker2'>
+                  <input type='text' class="form-control" ng-model="fitness.till" id="till"/>
+                  <span class="input-group-addon">
+                      <span class="fa fa-calendar">
+                      </span>
+                  </span>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label>Can Resume On</label>
+              <div class='input-group date' id='datetimepicker3'>
+                  <input type='text' class="form-control" ng-model="fitness.resume" id="resume"/>
+                  <span class="input-group-addon">
+                      <span class="fa fa-calendar">
+                      </span>
+                  </span>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label>Charges</label>
+              <input class="form-control" id='last_name' ng-model='fitness.charges' type="text">
+            </div>
+
+
+        <div class='form-actions'>
+          <div class='row'>
+            <div class='col-sm-7 col-sm-offset-5'>
+              <div class='btn btn-primary btn-lg' id="save" ng-click="save()">
+                <i class='icon-save'></i>
+                Issue
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+

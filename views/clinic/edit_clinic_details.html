@@ -1,0 +1,160 @@
+<div class='modal fade' id='new_area_modal' tabindex='-1'>
+<div class='modal-dialog'>
+  <div class='modal-content'>
+    <div class='modal-header'>
+      <button aria-hidden='true' class='close' data-dismiss='modal' type='button'>×</button>
+      <h4 class='modal-title' id='myModalLabel'>Add New Area</h4>
+    </div>
+    <div class='modal-body'>
+      <form class="form" style="margin-bottom: 0;" method="post" action="#" accept-charset="UTF-8"><input name="authenticity_token" type="hidden" />
+        <div class='form-group'>
+        <label for='inputText1'>New Area Name</label>
+        <input class='form-control' ng-model="new_area" id='new_area' placeholder='New Area' type='text'>
+        </div>
+      </form>
+
+    </div>
+    <div class='modal-footer'>
+      <button class='btn btn-default' data-dismiss='modal' type='button'>Close</button>
+      <button class='btn btn-primary' ng-click="save_new_area()" type='button'>Save changes</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class='row'>
+<div class='col-sm-12'>
+  <div class='box bordered-box blue-border'>
+    <div class='box-header blue-background'>
+      <div class='title'>
+        <i class='icon-circle'></i>
+        Clinic Details
+      </div>
+    </div>
+    <div class='box-content box-double-padding'>
+      <form class='form' style='margin-bottom: 0;' name="myForm">
+        <fieldset>
+          <div class='col-sm-6'>
+            <div class='form-group'>
+              <h3>Clinic Name: <strong style="color:red">{{clinic.clinic_name}}</strong></h3>
+            </div>
+
+            <div class='form-group'>
+              <label>Mobile No</label>
+              <input class="form-control" placeholder="+91 9673173727" id="mobile_no_1" name="mobile_no_1" ng-model="clinic.mobile_no_1" type="text" required  ng-pattern="validate_mobile_no">
+              <span style="color:red" ng-if="myForm.mobile_no_1.$error.required">Mobile Number Is Mandatory</span>
+              <span style="color:red" ng-if="myForm.mobile_no_1.$error.pattern"><br>Invalid Mobile No</span>
+            </div>
+            <div class='form-group'>
+              <label>Mobile No 2</label>
+              <input class="form-control" placeholder="+91 9673173727" id="mobile_no_2" name="mobile_no_2" ng-model="clinic.mobile_no_2" type="text"  ng-pattern="validate_mobile_no">
+              <span style="color:red" ng-if="myForm.mobile_no_2.$error.pattern"><br>Invalid Mobile No</span>
+            </div>
+
+            <div class='form-group'>
+              <label>Landline No 1</label>
+              <input class="form-control"  placeholder="+91 832 2640 092" id="landline_1" ng-model="clinic.landline_1" type="text">
+            </div>
+
+            <div class='form-group'>
+              <label>Landline No 2</label>
+              <input class="form-control"  placeholder="+91 832 2640 092" id='landline_2' ng-model='clinic.landline_2' type="text">
+            </div>
+
+            <div class='form-group'>
+              <label>Email 1</label>
+              <input disabled class="form-control" data-rule-email="true" data-rule-required="true" id="email_1" name="email_1" ng-model="clinic.email_1" placeholder="E-mail 1" type="text">
+            </div>
+
+            <div class='form-group'>
+              <label>Email 2</label>
+              <input class="form-control" data-rule-email="true" data-rule-required="true" id="email_2" name="email_2" ng-model="clinic.email_2" placeholder="E-mail 2" type="text">
+            </div>
+          </div>
+
+
+          <div class='col-sm-6'>
+            <div class='form-group'>
+              <h3>Clinic Code: <strong style="color:red">{{clinic.clinic_code}}</strong></h3>
+            </div>
+
+            <div class='form-group'>
+              <label>Country</label>
+              <select  class="select2 form-control" id="country_id" ng-model="clinic.country_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in countries" value="{{option.id}}" ng-selected="{{option.id == clinic.country_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>State</label>
+              <select  class="select2 form-control" id="state_id" ng-model="clinic.state_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in states" value="{{option.id}}" ng-selected="{{option.id == clinic.state_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>City</label>
+              <select  class="select2 form-control" id="city_id" ng-model="clinic.city_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in cities" value="{{option.id}}" ng-selected="{{option.id == clinic.city_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>Area</label><i ng-click="trigger_new_area_modal()" class="icon-plus-sign pull-right">Add New Area</i>
+              <select  class="select2 form-control" id="area_id" ng-model="clinic.area_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in areas" value="{{option.id}}" ng-selected="{{option.id == clinic.area_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>Address</label>
+              <textarea id="address" ng-model="clinic.address" class="autosize form-control" placeholder="Address" rows="2" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 52px;"></textarea>
+            </div>
+
+            <div class='form-group col-sm-4'>
+              <label>Print Reg Slip</label>
+              <div class="checkbox">
+                <label>
+                <input data-rule-required="true" id="print_reg_slip" name="print_reg_slip" type="checkbox" ng-model="clinic.print_reg_slip">
+                </label>
+              </div>
+            </div>
+
+            <div class='form-group col-sm-4'>
+              <label>Print Bill</label>
+              <div class="checkbox">
+                <label>
+                <input data-rule-required="true" id="print_bill" name="print_bill" type="checkbox" ng-model="clinic.print_bill">
+                </label>
+              </div>
+            </div>
+
+            <div class='form-group col-sm-4'>
+              <label>Print Prescription</label>
+              <div class="checkbox">
+                <label>
+                <input data-rule-required="true" id="print_prescription" name="print_prescription" type="checkbox" ng-model="clinic.print_prescription">
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </fieldset>
+
+        <div class='form-actions'>
+          <div class='row'>
+            <div class='col-sm-7 col-sm-offset-5'>
+              <div class='btn btn-primary btn-lg' id="save" ng-click="save()">
+                <i class='icon-save'></i>
+                Save
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+

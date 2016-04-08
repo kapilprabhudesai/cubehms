@@ -1,0 +1,20 @@
+<a href="#/add_patient" class="btn btn-success">Add Patient</a>
+<table class="table table-responsive">
+	<tr>
+		<th>Master ID</th>
+		<th>Name</th>
+		<th>Email</th>
+		<th>Mobile</th>
+		<th>Options</th>
+	</tr>
+
+	<tr ng-repeat="p in patients">
+		<td>{{p.patient_id}}</td>
+		<td>{{p.name}}</td>
+		<td>{{p.email_1}}</td>
+		<td>{{p.mobile_no_1}}</td>
+		<td>
+		<a class="btn btn-info" href="#add_patient?id={{p.patient_id}}">Edit</a>
+		</td>
+	</tr>
+</table>

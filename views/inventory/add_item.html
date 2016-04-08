@@ -1,0 +1,143 @@
+ <div class='modal fade' id='modal' tabindex='-1'>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <button aria-hidden='true' class='close' data-dismiss='modal' type='button'>×</button>
+        <h4 class='modal-title' id='myModalLabel'>Inventory Item Details</h4>
+      </div>
+      <div class='modal-body'>
+        <form class="form" style="margin-bottom: 0;" method="post" action="#" accept-charset="UTF-8"><input name="authenticity_token" type="hidden" />
+          <div class='form-group'>
+          <label for='inputText1' id='myModalLabel2'>New Expense Type Name</label>
+          <input class='form-control' ng-model="modal_capture" id='modal_capture' placeholder='New Expense Type' type='text'>
+          </div>
+        </form>
+
+      </div>
+      <div class='modal-footer'>
+        <button class='btn btn-default' data-dismiss='modal' type='button'>Close</button>
+        <button class='btn btn-primary' ng-click="save_modal()" type='button'>Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+  		<div class='box bordered-box blue-border'>
+    		<div class='box-header blue-background'>
+      			<div class='title'>
+        			<i class='icon-circle'></i>
+        			Inventory Item Details
+      			</div>	
+      		</div>	
+
+			<table class="table table-responsive">
+				<tr>	
+					<th>Name</th>
+					<td>
+						<input type='text' class="form-control" ng-model="item.name" id="name"/>					
+					</td>
+				</tr>
+				<tr>	
+					<th>Type</th>
+					<td>
+			            <div class='form-group'> 
+			              <i ng-click="trigger_new_modal('type','type')" class="icon-plus-sign pull-right">Add New Type</i>
+			              <select required  class="select2 form-control" id="type_id" ng-model="item.type_id">
+			              <option value="">Choose...</option>
+			              <option ng-repeat="(key, value) in types" value="{{key}}" ng-selected="{{key == item.type_id}}">{{value}}</option>
+			              </select>
+			            </div>						
+					</td>
+				</tr>
+
+				<tr>	
+					<th>Sub Type</th>
+					<td>
+			            <div class='form-group'> 
+			              <i ng-click="trigger_new_modal('sub_type', 'sub type')" class="icon-plus-sign pull-right">Add New Sub Type</i>
+			              <select required  class="select2 form-control" id="sub_type_id" ng-model="item.sub_type_id">
+			              <option value="">Choose...</option>
+			              <option ng-repeat="(key, value) in sub_types" value="{{key}}" ng-selected="{{key == item.sub_type_id}}">{{value}}</option>
+			              </select>
+			            </div>						
+					</td>
+				</tr>
+
+				<tr>	
+					<th>UOM</th>
+					<td>
+			            <div class='form-group'> 
+			              <i ng-click="trigger_new_modal('uom','Unit Of Measurement')" class="icon-plus-sign pull-right">Add New UOM</i>
+			              <select required  class="select2 form-control" id="uom" ng-model="item.uom">
+			              <option value="">Choose...</option>
+			              <option ng-repeat="(key, value) in uoms" value="{{key}}" ng-selected="{{key == item.uom}}">{{value}}</option>
+			              </select>
+			            </div>						
+					</td>
+				</tr>
+
+
+				<tr>	
+					<th>Danger Level</th>
+					<td>
+						<input type="text" class="form-control" ng-model="item.danger_level">
+					</td>
+				</tr>
+				<tr>	
+					<th>Status</th>
+					<td>
+			              <select required  class="select2 form-control" id="status" ng-model="item.status">
+			              <option value="">Choose...</option>
+			              <option value="1">Active</option>
+			              <option value="0">Inactive</option>
+			              </select>
+					</td>
+				</tr>
+				<tr>	
+					<td colspan="2" align="right"> 
+					<button ng-click="reset()" class="btn btn-danger">Reset</button>
+					<button ng-click="save()"  ng-if="edit_flag==0" class="btn btn-success btn">Save</button>
+					<button ng-click="update()"  ng-if="edit_flag==1" class="btn btn-info btn">Update</button>
+					</td>
+				</tr>
+			</table>	
+		</div>		
+	</div>
+	<div class="col-md-8">
+  		<div class='box bordered-box blue-border'>
+    		<div class='box-header blue-background'>
+      			<div class='title'>
+        			<i class='icon-circle'></i>
+        			List 
+      			</div>	
+      		</div>	
+			<table class="table table-responsive">
+				<tr>
+					<th>Name</th>
+					<th>Type</th>
+					<th>Sub Type</th>
+					<th>UOM</th>
+					<th>Danger Level</th>
+					<th>Status</th>
+				</tr>
+
+				<tr ng-repeat="(k,e) in items">
+					<td>{{e.name}}</td>
+					<td>{{types[e.type_id]}}</td>
+					<td>{{sub_types[e.sub_type_id]}}</td>
+					<td>{{uoms[e.uom]}}</td>
+					<td>{{e.danger_level}}</td>
+					<td><span ng-if="e.status=1">Active</span><span ng-if="e.status=0">Not-Active</span></td>
+				</tr>
+			</table>		
+		</div>	
+	</div>
+</div>
+
+<style type="text/css">
+	.select2{
+		clear: both;
+	}
+</style>

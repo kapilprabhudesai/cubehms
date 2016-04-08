@@ -1,0 +1,54 @@
+<div class='row'>
+<div class='col-sm-12'>
+  <div class='box bordered-box blue-border'>
+    <div class='box-header blue-background'>
+      <div class='title'>
+        <i class='icon-circle'></i>
+        Book Appointment For {{patient.first_name}} {{patient.last_name}}
+      </div>
+    </div>
+    <div class='box-content box-double-padding'>
+	<table class="table table-striped">
+		<tr>
+			<th>Select Doctor</th>
+			<td>
+				<select  class="select2 form-control" id="doctor_id">
+					<option value="">Choose...</option>
+					<option ng-repeat="option in doctors" value="{{option.user_master_id}}">{{option.name}}</option>
+				</select>
+			</td>
+		</tr>
+
+		<tr>
+			<th>Select Date</th>
+			<td>
+              <div class='input-group date' id='datetimepicker1'>
+                  <input type='text' class="form-control" id="doa"/>
+                  <span class="input-group-addon">
+                      <span class="fa fa-calendar">
+                      </span>
+                  </span>
+              </div>	
+              <button ng-click="search_slot()" class="btn btn-success">Search</button>			
+			</td>
+		</tr>
+		<tr>
+			<th>Slots Available</th>
+			<td>
+			<b>{{slots.day}}</b>
+			<span ng-repeat="(k,v) in doctor_slots track by $index">
+			<div ng-if="k==selected_day">
+				<span ng-repeat="x in v track by $index">
+				<button ng-if="x.availability=='1'" ng-click="book($index+1, x.text)" class="btn btn-danger">
+					{{x.text}}
+				</button>					
+				</span>
+
+			</div>
+			</td>
+		</tr>
+	</table>
+   </div>
+  </div>
+ </div>
+</div>

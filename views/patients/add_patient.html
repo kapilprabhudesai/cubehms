@@ -1,0 +1,143 @@
+<div class='row'>
+<div class='col-sm-12'>
+  <div class='box bordered-box blue-border'>
+    <div class='box-header blue-background'>
+      <div class='title'>
+        <i class='icon-circle'></i>
+        Update/Add New Patient to Clinic 
+      </div>
+
+      <div class='title pull-right'>
+        <i class='icon-circle'></i>
+        {{clinic.clinic_name}}
+      </div>
+      
+    </div>
+    <div class='box-content box-double-padding'>
+      <form class='form' name="myForm" style='margin-bottom: 0;'>
+        <fieldset>
+          <div class='col-sm-6'>
+            <div class='form-group'>
+              <h4>         
+              Male<input type="radio" name="gender" ng-model="patient.gender" value="male">
+              Female<input type="radio" name="gender" ng-model="patient.gender" value="female">
+              </h4>  
+            </div>
+            <div class='form-group' id="search_patient_container">
+              <label>Search Master</label>
+              <input class="form-control" autocomplete="off" id='global_patients' type="text">
+            </div>
+            <div class='form-group' id="search_doctor_container">
+              <label>Search Master Doctors</label>
+              <input class="form-control" autocomplete="off" id='global_doctors' type="text">
+            </div>
+
+            <div class='form-group'>
+              <label>Patient First Name</label>
+              <input class="form-control" id='first_name' name='first_name' ng-model='patient.first_name' type="text" required ng-pattern="/^[a-zA-Z]*$/">
+              <span style="color:red" ng-if="myForm.first_name.$error.required">First Name Is Mandatory</span>
+              <span style="color:red" ng-if="myForm.first_name.$error.pattern">Please Enter Valid Name</span>
+            </div>
+            <div class='form-group'>
+              <label>Patient Middle Name</label>
+              <input class="form-control" id='middle_name' name='middle_name' ng-model='patient.middle_name' type="text" ng-pattern="/^[a-zA-Z]*$/">
+              <span style="color:red" ng-if="myForm.middle_name.$error.pattern">Please Enter Valid Name</span>
+            </div>
+            <div class='form-group'>
+              <label>Patient Last Name</label>
+              <input class="form-control" id="last_name" name="last_name" ng-model="patient.last_name" type="text" required ng-pattern="/^[a-zA-Z]*$/">
+              <span style="color:red" ng-if="myForm.last_name.$error.required">Last Name Is Mandatory</span>
+              <span style="color:red" ng-if="myForm.last_name.$error.pattern">Please Enter Valid Name</span>
+            </div>
+            <div class='form-group'>
+              <label>Date Of Birth</label>
+              <div class='input-group date' id='datetimepicker1'>
+                  <input type='text' class="form-control" ng-model="patient.dob" id="dob"/>
+                  <span class="input-group-addon">
+                      <span class="fa fa-calendar">
+                      </span>
+                  </span>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label>Mobile No</label>
+              <input class="form-control" placeholder="+91 9673173727" id="mobile_no_1" name="mobile_no_1" ng-model="patient.mobile_no_1" type="text" required  ng-pattern="validate_mobile_no">
+              <span style="color:red" ng-if="myForm.mobile_no_1.$error.required">Mobile Number Is Mandatory</span>
+              <span style="color:red" ng-if="myForm.mobile_no_1.$error.pattern"><br>Invalid Mobile No</span>
+            </div>
+
+            <div class='form-group'>
+              <label>Landline No</label>
+              <input class="form-control" placeholder="+91 832 2640 092" id='landline_1' ng-model='patient.landline_1' type="text">
+            </div>
+
+          </div>
+
+
+          <div class='col-sm-6'>
+            <div class='form-group'>
+              <h4>Clinic Code: <strong style="color:red">{{clinic.clinic_code}}</strong></h4>
+            </div>
+
+            <div class='form-group'>
+              <label>Country</label>
+              <select  class="select2 form-control" id="country_id" ng-model="patient.country_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in countries" value="{{option.id}}" ng-selected="{{option.id == patient.country_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>State</label>
+              <select  class="select2 form-control" id="state_id" ng-model="patient.state_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in states" value="{{option.id}}" ng-selected="{{option.id == patient.state_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>City</label>
+              <select  class="select2 form-control" id="city_id" ng-model="patient.city_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in cities" value="{{option.id}}" ng-selected="{{option.id == patient.city_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>Area</label>
+              <select  class="select2 form-control" id="area_id" ng-model="patient.area_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in areas" value="{{option.id}}" ng-selected="{{option.id == patient.area_id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group'>
+              <label>Address</label>
+              <textarea rows="1" id="address" name="address" ng-model="patient.address" class="autosize form-control" placeholder="Address" required style="overflow: hidden; word-wrap: break-word; resize: horizontal;"></textarea>
+              <span style="color:red" ng-if="myForm.address.$error.required">Please Enter Your Address</span>
+            </div>
+
+
+            <div class='form-group'>
+              <label>Email 1</label>
+              <input class="form-control" id="email_1" name="email_1" ng-model="patient.email_1" placeholder="E-mail 1" type="email" required>
+              <span style="color:red" ng-if="myForm.email_1.$error.required">Please Enter Your Email</span>
+              <span style="color:red" ng-if="myForm.email_1.$error.email">Please Enter a Valid email</span>              
+            </div>
+
+          </div>
+        </fieldset>
+
+        <div class='form-actions'>
+          <div class='row'>
+            <div class='col-sm-7 col-sm-offset-5'>
+              <button type="submit" class='btn btn-primary btn-lg' id="save"  ng-disabled="!myForm.$valid" ng-click="save()">
+                <i class='icon-save'></i>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+

@@ -1,0 +1,118 @@
+ <div class='modal fade' id='new_expense_type_modal' tabindex='-1'>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <button aria-hidden='true' class='close' data-dismiss='modal' type='button'>×</button>
+        <h4 class='modal-title' id='myModalLabel'>Add New Expense Type</h4>
+      </div>
+      <div class='modal-body'>
+        <form class="form" style="margin-bottom: 0;" method="post" action="#" accept-charset="UTF-8"><input name="authenticity_token" type="hidden" />
+          <div class='form-group'>
+          <label for='inputText1'>New Expense Type Name</label>
+          <input class='form-control' ng-model="new_expense_type" id='new_expense_type' placeholder='New Expense Type' type='text'>
+          </div>
+        </form>
+
+      </div>
+      <div class='modal-footer'>
+        <button class='btn btn-default' data-dismiss='modal' type='button'>Close</button>
+        <button class='btn btn-primary' ng-click="save_new_expense_type()" type='button'>Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+  		<div class='box bordered-box blue-border'>
+    		<div class='box-header blue-background'>
+      			<div class='title'>
+        			<i class='icon-circle'></i>
+        			Add Expense 
+      			</div>	
+      		</div>	
+
+			<table class="table table-responsive">
+				<tr>	
+					<th>Expense Date</th>
+					<td>
+						<div class='input-group date' id='datetimepicker1'>
+						  <input type='text' class="form-control" ng-model="expense.date" id="date"/>
+						  <span class="input-group-addon">
+						      <span class="fa fa-calendar">
+						      </span>
+						  </span>
+						</div>						
+					</td>
+				</tr>
+				<tr>	
+					<th>Expense Type</th>
+					<td>
+			            <div class='form-group'> 
+			              <i ng-click="trigger_new_expense_type_modal()" class="icon-plus-sign pull-right">Add New Expense Type</i>
+			              <select required  class="select2 form-control" id="type_id" ng-model="expense.type_id">
+			              <option value="">Choose...</option>
+			              <option ng-repeat="(key, value) in types" value="{{key}}" ng-selected="{{key == expense.type_id}}">{{value}}</option>
+			              </select>
+			            </div>						
+					</td>
+				</tr>
+				<tr>	
+					<th>Amount</th>
+					<td>
+						<input type="text" class="form-control" ng-model="expense.amount">
+					</td>
+				</tr>
+				<tr>	
+					<th>Remark</th>
+					<td>
+						<textarea class="form-control" ng-model="expense.remark"></textarea>
+					</td>
+				</tr>
+				<tr>	
+					<td colspan="2" align="right"> 
+					<button ng-click="reset()" class="btn btn-danger">Reset</button>
+					<button ng-click="save()"  ng-if="edit_flag==0" class="btn btn-success btn">Save</button>
+					<button ng-click="update()"  ng-if="edit_flag==1" class="btn btn-info btn">Update</button>
+					</td>
+				</tr>
+			</table>	
+		</div>		
+	</div>
+	<div class="col-md-8">
+  		<div class='box bordered-box blue-border'>
+    		<div class='box-header blue-background'>
+      			<div class='title'>
+        			<i class='icon-circle'></i>
+        			Expense List 
+      			</div>	
+      		</div>	
+			<table class="table table-responsive">
+				<tr>
+					<th>Expense Date</th>
+					<th>Expense Type</th>
+					<th>Amount</th>
+					<th>Remark</th>
+					<th></th>
+				</tr>
+
+				<tr ng-repeat="(k,e) in expenses">
+					<td>{{e.date}}</td>
+					<td>{{types[e.type_id]}}</td>
+					<td>{{e.amount}}</td>
+					<td>{{e.remark}}</td>
+					<td>
+					<button ng-click="edit(e.id)" class="btn btn-info">Edit</button>
+					<button ng-click="remove(e.id)" class="btn btn-danger">Remove</button>
+					</td>
+				</tr>
+			</table>		
+		</div>	
+	</div>
+</div>
+
+<style type="text/css">
+	.select2{
+		clear: both;
+	}
+</style>

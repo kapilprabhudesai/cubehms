@@ -1,0 +1,26 @@
+<a href="#/add_fitness" class="btn btn-success">Issue Fitness Certificate</a>
+<table class="table table-responsive">
+	<tr>
+		<th> ID</th>
+		<th>Name</th>
+		<th>Illness</th>
+		<th>From</th>
+		<th>Till</th>
+		<th>Resume</th>
+		<th>Charges</th>
+		<th>Print</th>
+	</tr>
+
+	<tr ng-repeat="f in fitness_certs">
+		<td>{{f.id}}</td>
+		<td>{{f.name}} </td>
+		<td>{{f.illness}}</td>
+		<td>{{f.frm}}</td>
+		<td>{{f.till}}</td>
+		<td>{{f.resume}}</td>
+		<td>{{f.charges}}</td>
+		<td>
+		<button ng-click="printfc(f)">Print</button>
+		</td>
+	</tr>
+</table>
