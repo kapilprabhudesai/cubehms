@@ -310,6 +310,7 @@ $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded
   });  
     $scope.register_clinic = function(){
       $("#registr").hide();
+      start_spinner();
       var params =  {
               action: "register_clinic",
               form:$scope.register
@@ -321,10 +322,11 @@ $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded
             data: serializedData
         })
         .then(function(res){
+          stop_spinner();
           alert("You have been successfully registered! Please confirm via email sent to you");
           location.href="login.php";
         }, function(){
-
+            stop_spinner();
         }); 
     }
 

@@ -15,6 +15,7 @@
     <!-- / START - page related stylesheets [optional] -->
 
     <!-- /form-components.html -->
+    <link href="css/jquery-loader.css" media="all" rel="stylesheet" type="text/css" />
     <link href="assets/stylesheets/plugins/select2/select2.css" media="all" rel="stylesheet" type="text/css" />
     <link href="assets/stylesheets/plugins/bootstrap_colorpicker/bootstrap-colorpicker.css" media="all" rel="stylesheet" type="text/css" />
     <link href="assets/stylesheets/plugins/bootstrap_daterangepicker/bootstrap-daterangepicker.css" media="all" rel="stylesheet" type="text/css" />

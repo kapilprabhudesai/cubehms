@@ -1,5 +1,5 @@
     <!-- / jquery [required] -->
-    <script src="assets/javascripts/jquery/jquery.min.js" type="text/javascript"></script>
+     <script src="assets/javascripts/jquery/jquery.min.js" type="text/javascript"></script>
     <!-- / jquery mobile (for touch events) -->
     <script src="assets/javascripts/jquery/jquery.mobile.custom.min.js" type="text/javascript"></script>
     <!-- / jquery migrate (for compatibility with new jquery) [required] -->
@@ -18,6 +18,8 @@
     <script src="assets/javascripts/theme.js" type="text/javascript"></script>
     <!-- / demo file [not required!] -->
     <script src="assets/javascripts/demo.js" type="text/javascript"></script>
+    <script src="js/jquery-loader.js" type="text/javascript"></script>
+
     <!-- / START - page related files and scripts [optional] -->
     
     <script src="assets/javascripts/plugins/validate/jquery.validate.min.js" type="text/javascript"></script>

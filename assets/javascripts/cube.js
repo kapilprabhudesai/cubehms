@@ -140,3 +140,20 @@ function set_clinic(clinic_id){
     	$(".treatment").removeClass("active");
     	$("#treatment_"+id).addClass("active");
 	}
+
+function start_spinner(){
+	$data = {
+		autoCheck: 32,
+		size: "32",
+		bgColor: "#000",
+		bgOpacity: "0.7",
+		fontColor: "#FFF",
+		title: "Hold On...",
+		isOnly: true
+	};
+	$.loader.open($data);
+}
+
+function stop_spinner(){
+	$.loader.close(true);
+}	
