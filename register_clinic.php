@@ -49,30 +49,31 @@ $emails = all_user_emailids();
                   <h1 class='text-center title' id="title">Register Your Clinic</h1>
                   <form id="register" name="myForm" class='validate-form' method='post'>
                   <div class='form-group'>
-                    <label>Clinic Name</label>
+                    <label>Clinic Name<font style="color:red">*</font></label>
                     <input class="form-control" id='clinic_name' name='clinic_name' ng-model='register.clinic_name' type="text" required>
                     <span style="color:#b94a48" ng-if="myForm.clinic_name.$error.required">Clinic Name Is Mandatory</span>
                   </div>
 
                   <div class='form-group'>
-                    <label>Principal Doctor First Name</label>
+                    <label>Principal Doctor First Name<font style="color:red">*</font></label>
                     <input class="form-control" id='first_name' name='first_name' ng-model='register.first_name' type="text" required ng-pattern="/^[a-zA-Z]*$/">
                     <span style="color:#b94a48" ng-if="myForm.first_name.$error.required">First Name Is Mandatory</span>
                     <span style="color:#b94a48" ng-if="myForm.first_name.$error.pattern">Please Enter Valid Name</span>
                   </div>
                   <div class='form-group'>
-                    <label>Principal Doctor Middle Name</label>
+                    <label>Principal Doctor Middle Name<font style="color:red">*</font></label>
                     <input class="form-control" id='middle_name' name='middle_name' ng-model='register.middle_name' type="text" ng-pattern="/^[a-zA-Z]*$/">
                     <span style="color:#b94a48" ng-if="myForm.middle_name.$error.pattern">Please Enter Valid Name</span>
                   </div>
                   <div class='form-group'>
-                    <label>Principal Doctor Last Name</label>
+                    <label>Principal Doctor Last Name<font style="color:red">*</font></label>
                     <input class="form-control" id="last_name" name="last_name" ng-model="register.last_name" type="text" required ng-pattern="/^[a-zA-Z]*$/">
                     <span style="color:#b94a48" ng-if="myForm.last_name.$error.required">Last Name Is Mandatory</span>
                     <span style="color:#b94a48" ng-if="myForm.last_name.$error.pattern">Please Enter Valid Name</span>
                   </div>
 
                     <div class='form-group'>
+                    <label>Email<font style="color:red">*</font></label>
                       <div class='controls with-icon-over-input'>
                         <input autocomplete="off" class="form-control" id="email" name="email" placeholder="E-mail"  ng-keyup="is_unique()" type="email"ng-model="register.email"  required>
                         <i class='icon-user text-muted'></i>
@@ -81,6 +82,7 @@ $emails = all_user_emailids();
                       </div>
                     </div>
                     <div class='form-group'>
+                    <label>Password<font style="color:red">*</font></label>
                       <div class='controls with-icon-over-input'>
                         <input autocomplete="off" type="password" class="form-control" placeholder="Password" id="password" name="password" ng-model="register.password" ng-minlength="8" ng-maxlength="20" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/" required  />
                         <i class='icon-lock text-muted'></i>
@@ -90,6 +92,7 @@ $emails = all_user_emailids();
                       </div>
                     </div>
                     <div class='form-group'>
+                    <label>Confirm Password<font style="color:red">*</font></label>
                       <div class='controls with-icon-over-input'>
                       <input autocomplete="off" type="password" class="form-control" placeholder="Confirm Password" id="confirm_password" name="confirm_password" ng-model="register.confirm_password" ng-minlength="8" ng-maxlength="20" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/"  ng-required="true" ng-keyup="match_passwords()"/>
                       <i class='icon-lock text-muted'></i>
@@ -97,42 +100,43 @@ $emails = all_user_emailids();
                       <span style="color:#b94a48" ng-show="myForm.confirm_password.$error.unmatch">Passwords do not match.</span>
                       </div>
                     </div>
+                    <div class='form-group'>
+                      <label>Mobile No<font style="color:red">*</font></label>
+                      <input class="form-control" placeholder="+91 9673173727" id="mobile_no_1" name="mobile_no_1" ng-model="register.mobile_no_1" type="text" required  ng-pattern="validate_mobile_no">
+                      <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.required">Mobile Number Is Mandatory</span>
+                      <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.pattern"><br>Invalid Mobile No</span>
+                    </div>
             <div class='form-group'>
-              <label>Mobile No</label>
-              <input class="form-control" placeholder="+91 9673173727" id="mobile_no_1" name="mobile_no_1" ng-model="register.mobile_no_1" type="text" required  ng-pattern="validate_mobile_no">
-              <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.required">Mobile Number Is Mandatory</span>
-              <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.pattern"><br>Invalid Mobile No</span>
-            </div>
-            <div class='form-group'>
-              <label>Country</label>
+              <label>Country<font style="color:red">*</font></label>
               <select required  class="select2 form-control" id="country_id" ng-model="register.country_id">
               <option value="">Choose...</option>
               <option ng-repeat="option in countries" value="{{option.id}}" ng-selected="{{option.id == register.country_id}}">{{option.name}}</option>
               </select>
             </div>
             <div class='form-group'>
-              <label>State</label>
+              <label>State<font style="color:red">*</font></label>
               <select required  class="select2 form-control" id="state_id" ng-model="register.state_id">
               <option value="">Choose...</option>
               <option ng-repeat="option in states" value="{{option.id}}" ng-selected="{{option.id == register.state_id}}">{{option.name}}</option>
               </select>
             </div>
             <div class='form-group'>
-              <label>City</label>
+              <label>City<font style="color:red">*</font></label>
               <select required  class="select2 form-control" id="city_id" ng-model="register.city_id">
               <option value="">Choose...</option>
               <option ng-repeat="option in cities" value="{{option.id}}" ng-selected="{{option.id == register.city_id}}">{{option.name}}</option>
               </select>
             </div>
             <div class='form-group'>
-              <label>Area</label><i ng-click="trigger_new_area_modal()" class="icon-plus-sign pull-right">Add New Area</i>
+              <label>Area<font style="color:red">*</font></label>
+              <i ng-click="trigger_new_area_modal()" class="icon-plus-sign pull-right">Add New Area</i>
               <select required  class="select2 form-control" id="area_id" ng-model="register.area_id">
               <option value="">Choose...</option>
               <option ng-repeat="option in areas" value="{{option.id}}" ng-selected="{{option.id == register.area_id}}">{{option.name}}</option>
               </select>
             </div>
             <div class='form-group'>
-              <label>Address</label>
+              <label>Address<font style="color:red">*</font></label>
               <textarea id="address" ng-model="register.address" class="autosize form-control" placeholder="Address" rows="2" style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 52px;"></textarea>
             </div>
 
