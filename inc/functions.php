@@ -24,7 +24,10 @@ switch ($request_method){
 	}
 
 	switch ($action) {
+			case 'otp_patient_edit':
 
+			break;
+			
 			case 'get_availabilities':
 			$obj = new ManageDoctors();
 			$data = $obj->get_availability();
@@ -499,10 +502,17 @@ switch ($request_method){
 				$json['msg'] = "Patient Updated";
 				$json['status'] = true;					
 			}else{
+				   	$params['owned_by']= clinic();
 				   	if(isset($params['id'])){
+				   		if($params['id']!=""){
+					   		$params['owned_by']= "";	
+				   		}
 				   		unset($params['id']);
+				   		
 				   	}
+
 					$params['clinic_id']= clinic();
+
 					$res = $obj->create($params);
 					$json['msg'] = "New Patient Added";
 					$json['status'] = true;				

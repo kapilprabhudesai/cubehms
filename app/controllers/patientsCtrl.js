@@ -42,8 +42,8 @@ app.controller('patientsCtrl', function($scope, $http, $routeParams) {
 		dob:'',
 		gender:''
 	};
-	
-	$scope.save = function(){
+
+	$scope.save2 = function(){
 		$scope.patient.dob = $("#dob").val();
 		var params =  {
 		        action: "add_patient",
@@ -65,6 +65,42 @@ app.controller('patientsCtrl', function($scope, $http, $routeParams) {
 	    }, function(){
 
 	    });		
+	}
+	
+	$scope.save = function(){
+		if($routeParams.id !== undefined){
+			if($scope.patient.owned_by=='0' || $scope.patient.owned_by==0){
+				var params =  {
+				        action: "otp_patient_edit",
+				        id:$scope.patient.id,
+				        otp:'1239'
+				    };
+				var serializedData = $.param(params);
+			    $http({
+			        url: CMS_PATH+"inc/functions.php",
+			        method: "POST",
+			        data: serializedData
+			    })
+			    .then(function(res){
+		 
+			    }, function(){
+
+			    });	
+
+			    var y = window.prompt("Enter OTP received by patient","");	
+			    if(y=='1239'){
+			    	$scope.save2();
+			    }else{
+			    	alert("wrong OTP.");
+			    }		
+			}else{
+				$scope.save2();
+			}
+		}else{
+			$scope.save2();
+		}	
+
+
 	}
 
 
