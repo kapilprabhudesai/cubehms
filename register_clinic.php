@@ -102,9 +102,10 @@ $emails = all_user_emailids();
                     </div>
                     <div class='form-group'>
                       <label>Mobile No<font style="color:red">*</font></label>
-                      <input class="form-control" placeholder="+91 9673173727" id="mobile_no_1" name="mobile_no_1" ng-model="register.mobile_no_1" type="text" required  ng-pattern="validate_mobile_no">
+                      <input class="form-control" placeholder="+91 9673173727" ng-keyup="is_unique_mobile()" id="mobile_no_1" name="mobile_no_1" ng-model="register.mobile_no_1" type="text" required  ng-pattern="validate_mobile_no">
                       <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.required">Mobile Number Is Mandatory</span>
                       <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.pattern"><br>Invalid Mobile No</span>
+                      <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.unique_mobile">Mobile No Already Registered</span>
                     </div>
             <div class='form-group'>
               <label>Country<font style="color:red">*</font></label>
@@ -370,7 +371,37 @@ $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded
         }else{
              $scope.myForm.email.$setValidity('unique', false);
         }
-}
+    }
+
+
+    $scope.is_unique_mobile = function(){
+        var field =$scope.myForm.mobile_no_1;
+        var typed_text =field.$viewValue;
+        $scope.myForm.mobile_no_1.$setValidity('unique_mobile', '');
+        
+        if(typed_text.length==14){
+          var arr = [];
+          var params =  {
+                action: "is_unique_mobile",
+                str:typed_text
+            };
+         var serializedData = $.param(params);
+          $http({
+              url: CMS_PATH+"inc/functions.php",
+              method: "POST",
+              data: serializedData
+          })
+          .then(function(res){
+            var found = res.data;
+            if(found==0){
+                 $scope.myForm.mobile_no_1.$setValidity('unique_mobile', '');
+            }else{
+                 $scope.myForm.mobile_no_1.$setValidity('unique_mobile', false);
+            }
+          });
+        }
+        }
+
 });
 </script>
 <?php

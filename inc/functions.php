@@ -24,6 +24,12 @@ switch ($request_method){
 	}
 
 	switch ($action) {
+			case 'is_unique_mobile':
+			$obj = new Common();
+			$data = $obj->is_unique_mobile($params['str']);
+			echo ($data[0]['total_duplicates']);
+			break;
+
 			case 'otp_patient_edit':
 			$obj = new Patient();
 			$list = $obj->fill_user_details($params['id']);
