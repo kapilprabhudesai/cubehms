@@ -16,7 +16,7 @@ app.controller('slotsCtrl', function($scope, $http) {
 		    	a.push(parseInt(x[2]));
 		    }
 		});		
-		console.log(a);
+		
 		if(a.length==2){
 			for(var m=a[0];m<=a[1];m++){
 				$("#"+k+"_"+s+"_"+m).attr("checked", "checked");				
