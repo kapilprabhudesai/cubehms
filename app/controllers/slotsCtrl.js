@@ -13,20 +13,21 @@ app.controller('slotsCtrl', function($scope, $http) {
 		    if($( this ).attr("checked") == 'checked'){
 		    	var x = ($( this ).attr("id"));
 		    	x = x.split('_');
-		    	a.push(x[2]);
+		    	a.push(parseInt(x[2]));
 		    }
 		});		
+		console.log(a);
 		if(a.length==2){
-			for(var i=a[0];i<=a[1];i++){
-				$("#"+k+"_"+s+"_"+i).attr("checked", "checked");
-				$("."+k+"_"+s).attr("disabled", "disabled");
+			for(var m=a[0];m<=a[1];m++){
+				$("#"+k+"_"+s+"_"+m).attr("checked", "checked");				
 			}
+			$("."+k+"_"+s).attr("disabled", "disabled");
 			for(var j=0;j<$scope.sl.length;j++){
 				if(s==$scope.sl[j]){
 					continue;
 				}
-				for(var i=0;i<=a[1];i++){
-					$("#"+k+"_"+$scope.sl[j]+"_"+i).attr("disabled", "disabled");
+				for(var m=0;m<=a[1];m++){
+					$("#"+k+"_"+$scope.sl[j]+"_"+m).attr("disabled", "disabled");
 				}		
 			}	
 		}

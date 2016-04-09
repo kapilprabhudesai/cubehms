@@ -198,6 +198,13 @@ app.controller('doctorsCtrl', function($scope, $http, $routeParams) {
 	  $scope.doctor.area_id = aid;
 	});  
 
+
+   	$( "#doctor_id" ).change(function() {
+	  var aid = $(this).val();
+	  $scope.availability.doctor_id = aid;
+	});  
+
+
    	$( "#specialties" ).change(function() {
 	 $scope.selected_specialties = $(this).val().join(',');
 	 $scope.doctor.specialties = $scope.selected_specialties;
@@ -241,9 +248,83 @@ app.controller('doctorsCtrl', function($scope, $http, $routeParams) {
 
 	    });	
 	}
+
+	$scope.availability = {
+		doctor_id:'',
+		frm:'',
+		till:'',
+		resume:'',
+		remark:'',
+		block_appointments:''
+	};
+	$scope.availability_edit_flag=0;
+
+	$scope.save_availability = function(){
+		$scope.availability.frm = $("#from").val();
+		$scope.availability.till = $("#till").val();
+		$scope.availability.resume = $("#resume").val();
+		$scope.availability.block_appointments = 'yes';	
+		var params =  {
+		        action: "save_availability",
+		        availability:$scope.availability
+		    };
+		console.log(params);
+		
+		var serializedData = $.param(params);
+	    $http({
+	        url: CMS_PATH+"inc/functions.php",
+	        method: "POST",
+	        data: serializedData
+	    })
+	    .then(function(res){
+	    	$scope.get_availabilities();
+	    	$.jGrowl(res.data);
+	    }, function(){
+
+	    });				
+	}
+
+	$scope.reset_availability = function(){
+
+		$scope.availability = {
+			doctor_id:'',
+			frm:'',
+			till:'',
+			resume:'',
+			remark:'',
+			block_appointments
+		};		
+	}
+
+	$scope.availabilities = {};
+	$scope.get_availabilities = function(){
+		var params =  {
+		        action: "get_availabilities"
+		    };
+		
+		var serializedData = $.param(params);
+	    $http({
+	        url: CMS_PATH+"inc/functions.php",
+	        method: "POST",
+	        data: serializedData
+	    })
+	    .then(function(res){
+	    	$scope.availabilities = res.data;
+	    }, function(){
+
+	    });				
+	}		
+
 	if($routeParams.id !== undefined){
 		$scope.load_doctor($routeParams.id);
 		$("#search_doctor_container").hide();
+	}else if($routeParams.page !== undefined && $routeParams.page == 'availability'){
+		$scope.get_availabilities();
+		$(document).ready(function(){
+	        $('#datetimepicker1').datetimepicker({pickTime:false, format:'YYYY-MM-DD'});
+	        $('#datetimepicker2').datetimepicker({pickTime:false, format:'YYYY-MM-DD'});
+	        $('#datetimepicker3').datetimepicker({pickTime:false, format:'YYYY-MM-DD'});
+		});		
 	}
 
 $(document).ready(function () {

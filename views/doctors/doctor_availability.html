@@ -1,0 +1,141 @@
+<div class="row">
+	<div class="col-md-4">
+  		<div class='box bordered-box blue-border'>
+    		<div class='box-header blue-background'>
+      			<div class='title'>
+        			<i class='icon-circle'></i>
+        			Doctor Availability
+      			</div>	
+      		</div>	
+
+			<table class="table table-responsive">
+				<tr>	
+					<th>Select Doctor</th>
+					<td>
+			            <div class='form-group'> 
+			              <select required  class="form-control" id="doctor_id" ng-model="availability.doctor_id">
+			              <option value="">Choose...</option>
+			              <option ng-repeat="(key, value) in doctors" value="{{value.doctor_master_id}}">{{value.name}}</option>
+			              </select>
+			            </div>						
+					</td>
+				</tr>
+
+				<tr>	
+					<th>Available From</th>
+					<td>
+			            <div class='form-group'>
+			              <div class='input-group date' id='datetimepicker1'>
+			                  <input type='text' class="form-control" ng-model="availability.frm" id="from"/>
+			                  <span class="input-group-addon">
+			                      <span class="fa fa-calendar">
+			                      </span>
+			                  </span>
+			              </div>
+			            </div>
+            		</td>
+				</tr>
+
+				<tr>	
+					<th>Unavailable Till</th>
+					<td>
+			            <div class='form-group'>
+			              <div class='input-group date' id='datetimepicker2'>
+			                  <input type='text' class="form-control" ng-model="availability.till" id="till"/>
+			                  <span class="input-group-addon">
+			                      <span class="fa fa-calendar">
+			                      </span>
+			                  </span>
+			              </div>
+			            </div>
+			       </td>
+				</tr>
+
+
+				<tr>	
+					<th>Resume On</th>
+					<td>
+			            <div class='form-group'>
+			              <div class='input-group date' id='datetimepicker3'>
+			                  <input type='text' class="form-control" ng-model="availability.resume" id="resume"/>
+			                  <span class="input-group-addon">
+			                      <span class="fa fa-calendar">
+			                      </span>
+			                  </span>
+			              </div>
+			            </div>
+					</td>
+				</tr>
+				<tr>	
+					<th>Remark</th>
+					<td>
+			            <div class='form-group'>
+			              <input class="form-control" id='remark' ng-model='availability.remark' type="text">
+			            </div>
+					</td>
+				</tr>
+
+				<tr>	
+					<th>Block Appointment</th>
+					<td>
+			            <div class='form-group'> 
+			              <select required  class="form-control" id="block_appointments" ng-model="availability.block_appointments">
+			              <option value="">Choose...</option>
+			              <option value="yes">Yes</option>
+			              <option value="no">No</option>
+			              </select>
+			            </div>						
+					</td>
+				</tr>
+
+				<tr>	
+					<td colspan="2" align="right"> 
+					<button ng-click="reset_availability()" class="btn btn-danger">Reset</button>
+					<button ng-click="save_availability()"  ng-if="availability_edit_flag==0" class="btn btn-success btn">Save</button>
+					<button ng-click="update_availability()"  ng-if="availability_edit_flag==1" class="btn btn-info btn">Update</button>
+					</td>
+				</tr>
+			</table>	
+		</div>		
+	</div>
+	<div class="col-md-8">
+  		<div class='box bordered-box blue-border'>
+    		<div class='box-header blue-background'>
+      			<div class='title'>
+        			<i class='icon-circle'></i>
+        			List 
+      			</div>	
+      		</div>	
+			<table class="table table-responsive">
+				<tr>
+					<th>Name</th>
+					<th>From</th>
+					<th>To</th>
+					<th>Resume</th>
+					<th>Remark</th>
+					<th>Block Appointment</th>
+				</tr>
+
+				<tr ng-repeat="(k,e) in availabilities">
+					<td>
+					<span ng-repeat="d in doctors" ng-if="d.doctor_master_id==e.doctor_id">
+						{{d.name}}						
+					</span>
+
+					</td>
+					<td>{{e.frm}}</td>
+					<td>{{e.till}}</td>
+					<td>{{e.resume}}</td>
+					<td>{{e.remark}}</td>
+					<td>{{e.block_appointments}}</td>
+				</tr>
+			</table>		
+		</div>	
+	</div>
+</div>
+
+<style type="text/css">
+	.select2{
+		clear: both;
+	}
+</style>

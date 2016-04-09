@@ -6,6 +6,58 @@ app.controller('manageCtrl', function($scope, $http, $routeParams) {
 	if($routeParams.aid !== undefined){
 		$scope.appointment_id = $routeParams.aid;
 	}	
+
+    $scope.clinic={};
+    $scope.clinic_info  = function(){
+        var params =  {
+                action: "get_clinic_details",
+            };
+        var serializedData = $.param(params);
+        $http({
+            url: CMS_PATH+"inc/functions.php",
+            method: "POST",
+            data: serializedData
+        })
+        .then(handleSuccess);      
+        function handleSuccess(res){
+            $scope.clinic = res.data;
+             
+            if(res.data.print_reg_slip == "true"){
+                $scope.clinic.print_reg_slip = true;
+            }else{
+                $scope.clinic.print_reg_slip = false;
+            }
+
+            if(res.data.print_bill == "true"){
+                $scope.clinic.print_bill = true;
+            }else{
+                $scope.clinic.print_bill = false;
+            }
+
+            if(res.data.print_prescription == "true"){
+                $scope.clinic.print_prescription = true;
+            }else{
+                $scope.clinic.print_prescription = false;
+            }
+            console.log($scope.clinic);
+            if($scope.clinic.print_prescription == false && $scope.clinic.print_bill == false){
+                $("#bil").hide();
+            }else if($scope.clinic.print_prescription == true && $scope.clinic.print_bill == false){
+                $("#bil").html("Print Prescription");
+                $scope.ppb=1;
+            }
+            else if($scope.clinic.print_prescription == false && $scope.clinic.print_bill == true){
+                $("#bil").html("Print Bill");
+                $scope.ppb=2;
+            }
+            else if($scope.clinic.print_prescription == true && $scope.clinic.print_bill == true){
+
+            }
+        }
+    }
+    $scope.clinic_info();
+    $scope.ppb=3;
+
     $scope.treatment  = {
         selected_fee:'',
     	amount:'',

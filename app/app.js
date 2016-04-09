@@ -86,6 +86,10 @@ app.directive('mandate', function() {
 			templateUrl: 'views/inventory/manage.html',
 			controller: 'inventoryCtrl'
 	  })	  
+      .when('/doctor_availability', {
+        templateUrl: 'views/doctors/doctor_availability.html',
+        controller: 'doctorsCtrl'
+      })      
 			.otherwise({
 				redirectTo: '/err'
 			});

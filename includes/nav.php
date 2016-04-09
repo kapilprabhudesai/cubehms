@@ -24,6 +24,16 @@
             </li>
             <?php endif; ?>
             
+
+            <?php if($_SESSION['current_role']=='clinic_admin' ||$_SESSION['current_role']=='receptionist' ||$_SESSION['current_role']=='nurse' ): ?>
+            <li class=''>
+              <a href="#/doctor_availability?page=availability"><i class='icon-edit'></i>
+              <span>Doctor Availability</span>
+              </a>
+            </li>
+            <?php endif; ?>
+            
+
             <?php if($_SESSION['current_role']=='clinic_admin'): ?>
             <li class=''>
               <a href="#/manage_doctors"><i class='icon-edit'></i>

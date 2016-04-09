@@ -358,8 +358,8 @@ $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded
         foreach ($emails as $key => $value) {
           echo "arr.push('".$value['email']."');";
         }
-        
         ?>
+                console.log(arr);
         var found = parseInt(arr.indexOf(typed_text));
         if(found==-1){
              $scope.myForm.email.$setValidity('unique', '');

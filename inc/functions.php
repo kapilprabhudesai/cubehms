@@ -25,6 +25,18 @@ switch ($request_method){
 
 	switch ($action) {
 
+			case 'get_availabilities':
+			$obj = new ManageDoctors();
+			$data = $obj->get_availability();
+			echo json_encode($data);
+			break;
+
+			case 'save_availability':
+			$obj = new ManageDoctors();
+			$data = $obj->set_availability($params['availability']);
+			echo "Success";
+			break;
+
 			case 'manage_add_combo':
 			$obj = new Referral();
 			$data = $obj->add_combos($params);
