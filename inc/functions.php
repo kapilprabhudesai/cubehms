@@ -25,9 +25,21 @@ switch ($request_method){
 
 	switch ($action) {
 			case 'otp_patient_edit':
-
+			$obj = new Patient();
+			$list = $obj->fill_user_details($params['id']);
+			echo "string";
+			$email = array(
+					'from'=> SUPPORT_EMAIL, 
+					'to'=>$list[0]['email_1'],
+					'subject'=>'Information Edit Approval @CubeHMS',
+					'body'=>'We have received a request to change your information. Please provide OTP 1239 if asked by doctor'
+				); 
+				
+				$email_string = http_build_query($email);
+	 		curl_mail($email_string);	
+			SendSMS($list[0]['mobile_no_1'], "OTP For Editing Information :1239");			
 			break;
-			
+
 			case 'get_availabilities':
 			$obj = new ManageDoctors();
 			$data = $obj->get_availability();
