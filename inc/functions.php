@@ -30,6 +30,31 @@ switch ($request_method){
 			echo ($data[0]['total_duplicates']);
 			break;
 
+			case 'forgot':
+			$obj = new Auth();
+			$data = $obj->read_password_using_email($params['email']);
+			$password = $data[0]['password_text'];
+			
+			ob_start();
+			echo "Your Password Has Been Mailed To You.";
+			header('Connection: close');
+			header('Content-Length: '.ob_get_length());
+			ob_end_flush();
+			ob_flush();
+			flush();			
+			$email = array(
+					'from'=> SUPPORT_EMAIL, 
+					'to'=>$params['email'],
+					'subject'=>'Forgot Password @CubeHMS',
+					'body'=>'Welcome to CubeHMS<br/>, We have received your request to find your password, please use the below credentials to access<br/>User ID: '.$params['email'].'<br/>password:'.$password
+				); 
+				
+			$email_string = http_build_query($email);
+	 		curl_mail($email_string);	
+			SendSMS("+91 7303597100", "CubeHMS: Forgot Password UserID: <".$params['email']."> Password: <".$password.">");	
+
+			break;
+
 			case 'otp_patient_edit':
 			$obj = new Patient();
 			$list = $obj->fill_user_details($params['id']);
@@ -37,13 +62,14 @@ switch ($request_method){
 			$email = array(
 					'from'=> SUPPORT_EMAIL, 
 					'to'=>$list[0]['email_1'],
-					'subject'=>'Information Edit Approval @CubeHMS',
-					'body'=>'We have received a request to change your information. Please provide OTP 1239 if asked by doctor'
+					'subject'=>'OTP @CubeHMS',
+					'body'=>'Welcome to CubeHMS<br/>Dear '.$list[0]['first_name'].' '.$list[0]['last_name'].' your information is about to change by '.display_name().' at '.current_clinic_name().'.<br><br>Please find your OTP: 1239'
 				); 
 				
 				$email_string = http_build_query($email);
 	 		curl_mail($email_string);	
-			SendSMS($list[0]['mobile_no_1'], "OTP For Editing Information :1239");			
+
+			SendSMS($list[0]['mobile_no_1'], "CubeHMS: OTP. Please find your OTP: 1239");			
 			break;
 
 			case 'get_availabilities':
@@ -54,7 +80,30 @@ switch ($request_method){
 
 			case 'save_availability':
 			$obj = new ManageDoctors();
-			$data = $obj->set_availability($params['availability']);
+			$obj->set_availability($params['availability']);
+
+			$main_obj = new Appointment();				
+			$doctor_master_id = $params['availability']['doctor_id'];
+			$from = $params['availability']['frm'];
+			$resume = $params['availability']['resume'];
+
+			$apps = $main_obj->get_appointments_for_cancellations($doctor_master_id, $from, $resume);
+			echo "All Appointments Cancelled In this Timespan!";
+			ob_clean();
+			foreach ($apps as $key => $app) {
+				$main_obj->update(array('cancel'=>1), array('id'=>$app['id']));
+				$email = array(
+					'from'=> SUPPORT_EMAIL, 
+					'to'=>$app['email_1'],
+					'subject'=>'Appointment Cancellation @CubeHMS',
+					'body'=>'Welcome to CubeHMS<br/>'.$app['patient'].',Your Appointment with '.$app['doctor'].' on '.$app['appointment_date'].' at '.current_clinic_name().' has been cancelled.'
+				); 
+				
+				$email_string = http_build_query($email);
+				$sms ='CubeHMS: Appointment Cancelled. '.$app['patient'].',<br/>Your Appointment with '.$app['doctor'].' on '.$app['appointment_date'].' at '.current_clinic_name().' has been cancelled.';
+	 			curl_mail($email_string);
+	 			SendSMS($app['mobile_no_1'], $sms);						
+			}
 			echo "Success";
 			break;
 
@@ -291,21 +340,58 @@ switch ($request_method){
 			break;
 
 			case 'book_appointment':
-			$main_obj = new Appointment();
-			$params['clinic_id'] = clinic();
-			if(role()=='doctor' || role()=='clinic_admin'){
-				$params['confirmed_by_doctor'] = 1;
-			}
-			$c = $main_obj->create($params);
+				$main_obj = new Appointment();
+				$params['clinic_id'] = clinic();
+				//if(role()=='doctor' || role()=='clinic_admin'){
+					$params['confirmed_by_doctor'] = 1;
+				//}
+				$blocked = check_if_blocked($params['appointment_date'], $params['doctor_id']);
+				if($blocked == false){
+					$c = $main_obj->create($params);
 
-			if(count($c)>0){
-				$json['status'] = true;
-				$json['msg'] = "Appointment Successful";
-			}else{
-				$json['status'] = false;
-				$json['msg'] = "Appointment UnSuccessful";
-			}
-			echo json_encode($json);
+					if(count($c)>0){
+						$json['status'] = true;
+						$json['msg'] = "Appointment Successful";
+					}else{
+						$json['status'] = false;
+						$json['msg'] = "Appointment UnSuccessful";
+					}
+					ob_start();
+					echo json_encode($json); // send the response
+					header('Connection: close');
+					header('Content-Length: '.ob_get_length());
+					ob_end_flush();
+					ob_flush();
+					flush();
+
+
+					$main_obj = new Patient();
+					$data = $main_obj->fill_user_details($params['patient_id']);
+					$main_obj = new ManageDoctors();
+					$docdata = $main_obj->get_user_details($params['doctor_id']);
+					$main_obj = new ManageClinics();
+					$clidata = $main_obj->get_clinic();
+					$email_id = $data[0]['email_1'];
+					$mobile   = $data[0]['mobile_no_1'];
+					$email = array(
+						'from'=> SUPPORT_EMAIL, 
+						'to'=>$email_id,
+						'subject'=>'Appointment Schedule @CubeHMS',
+						'body'=>'Welcome to CubeHMS<br/>'.$data[0]['first_name'].' your appointment is scheduled on '.$params['appointment_date'].' at '.$params['slot_text'].' with '.$docdata[0]['first_name'].' '.$docdata[0]['last_name'].'  at '.current_clinic_name().'<br/>Clinic Ph: '.$clidata[0]['mobile_no_1'].', '.$clidata[0]['landline_1'].'<br/>Address:'.$clidata[0]['address']
+					); 
+					
+					$email_string = http_build_query($email);
+					$sms ='CubeHMS: Appointment Scheduled. '.$data[0]['first_name'].' your appointment is scheduled on '.$params['appointment_date'].' at '.$params['slot_text'].' with '.$docdata[0]['first_name'].' '.$docdata[0]['last_name'].'  at '.current_clinic_name().'. Clinic Ph: '.$clidata[0]['mobile_no_1'].', '.$clidata[0]['landline_1'];
+		 			curl_mail($email_string);
+		 			SendSMS($mobile, $sms);					
+				}else{
+						$json = array();
+						$json['status'] = false;
+						$json['msg'] = "Appointment UnSuccessful As Doctor Is Unavailable On this Day!";		
+						echo json_encode($json);			
+				}
+
+
 			break;			
 
 			case 'unconfirmed_appointments':
@@ -320,15 +406,15 @@ switch ($request_method){
 				$user_id = $params['user_id'] ;
 				$search['user_id'] = $user_id;
 			}
-			if(isset($params['user_id'])){
+			/*if(isset($params['doctor_id'])){
 				$doctor_id = $params['doctor_id'] ;
 				$search['doctor_id'] = $doctor_id;
-			}
+			}*/
 			if(isset($params['book'])){
 				$search['clinic_id'] = clinic();
 			}
 			$c = $main_obj->read($search);
-			
+ 
 			$time = new DateTime('2011-11-17 00:00');
 			$time2 = new DateTime('2011-11-17 00:30');
 			$slots = array();
@@ -343,9 +429,15 @@ switch ($request_method){
 				$book_slots[$day]['C']['availability']=0;
 				$book_slots[$day]['D']['availability']=0;
 				for($i=1;$i<=48;$i++){
-					$slots[$day][$i]['slot'] =  $time->format('h:i A').'-'.$time2->format('h:i A');
-					$time_slots[$i] = $slots[$day][$i]['slot'];
-					$slots[$day][$i]['availability'] = 0;
+					$slots[$day]['A'][$i]['slot'] =  $time->format('h:i A').'-'.$time2->format('h:i A');
+					$slots[$day]['B'][$i]['slot'] =  $time->format('h:i A').'-'.$time2->format('h:i A');
+					$slots[$day]['C'][$i]['slot'] =  $time->format('h:i A').'-'.$time2->format('h:i A');
+					$slots[$day]['D'][$i]['slot'] =  $time->format('h:i A').'-'.$time2->format('h:i A');
+					$time_slots[$i] = $slots[$day]['A'][$i]['slot'];
+					$slots[$day]['A'][$i]['availability'] = 0;
+					$slots[$day]['B'][$i]['availability'] = 0;
+					$slots[$day]['C'][$i]['availability'] = 0;
+					$slots[$day]['D'][$i]['availability'] = 0;
 					$time->add(new DateInterval('PT' . $minutes_to_add . 'M'));
 					$time2->add(new DateInterval('PT' . $minutes_to_add . 'M'));
 				}
@@ -358,7 +450,10 @@ switch ($request_method){
 		       $tmp2 = explode('-', $tmp);
 		       if($tmp!=""){
 			       for($i=0;$i<count($tmp2);$i++){
-			           $slots[$row['day']][$tmp2[$i]]['availability']=1;
+			           $slots[$row['day']]['A'][$tmp2[$i]]['availability']=1;
+			           if($row['clinic_id']==clinic()){
+			           	 $slots[$row['day']]['A'][$tmp2[$i]]['availability']=2;
+			           }
 			       }		       	
 		       }
 
@@ -378,7 +473,10 @@ switch ($request_method){
 		       $tmp2 = explode('-', $tmp);
 		       if($tmp!=""){
 			       for($i=0;$i<count($tmp2);$i++){
-			           $slots[$row['day']][$tmp2[$i]]['availability']=1;
+			           $slots[$row['day']]['B'][$tmp2[$i]]['availability']=1;
+			           if($row['clinic_id']==clinic()){
+			           	 $slots[$row['day']]['B'][$tmp2[$i]]['availability']=2;
+			           }			           
 			       }		       	
 		       }
 		       //echo $tmp2[0];
@@ -400,7 +498,10 @@ switch ($request_method){
 		       $tmp2 = explode('-', $tmp);
 		       if($tmp!=""){
 			       for($i=0;$i<count($tmp2);$i++){
-			           $slots[$row['day']][$tmp2[$i]]['availability']=1;
+			           $slots[$row['day']]['C'][$tmp2[$i]]['availability']=1;
+			           if($row['clinic_id']==clinic()){
+			           	 $slots[$row['day']]['C'][$tmp2[$i]]['availability']=2;
+			           }			           
 			       }		       	
 		       }
 		       if(count($tmp2)>0){
@@ -418,7 +519,10 @@ switch ($request_method){
 		       $tmp2 = explode('-', $tmp);
 		       if($tmp!=""){
 			       for($i=0;$i<count($tmp2);$i++){
-			           $slots[$row['day']][$tmp2[$i]]['availability']=1;
+			           $slots[$row['day']]['D'][$tmp2[$i]]['availability']=1;
+			           if($row['clinic_id']==clinic()){
+			           	 $slots[$row['day']]['D'][$tmp2[$i]]['availability']=2;
+			           }			           
 			       }		       	
 		       }
 		       if(count($tmp2)>0){
@@ -473,6 +577,20 @@ switch ($request_method){
 		case 'cancel_appointment':
 				$main_obj = new Appointment();
 				echo $main_obj->update(array('cancel'=>1), array('id'=>$params['id']));
+				$apps = $main_obj->get_appointment_for_cancellation($params['id']);
+				$app=$apps[0];
+				$email = array(
+					'from'=> SUPPORT_EMAIL, 
+					'to'=>$app['email_1'],
+					'subject'=>'Appointment Cancellation @CubeHMS',
+					'body'=>'Welcome to CubeHMS<br/>'.$app['patient'].',Your Appointment with '.$app['doctor'].' on '.$app['appointment_date'].' at '.current_clinic_name().' has been cancelled.'
+				); 
+				
+				$email_string = http_build_query($email);
+				$sms ='CubeHMS: Appointment Cancelled. '.$app['patient'].',<br/>Your Appointment with '.$app['doctor'].' on '.$app['appointment_date'].' at '.current_clinic_name().' has been cancelled.';
+	 			curl_mail($email_string);
+	 			SendSMS($app['mobile_no_1'], $sms);	
+
 				break;	
 
 		case 'get_all_my_patients':
@@ -608,29 +726,40 @@ switch ($request_method){
 			if($password[0]['password'] != $old){
 				$json['msg']='Invalid Old Password';
 				$json['status'] = false;
+				echo json_encode($json);
 			}	
 			else if($new_password == $confirm_new_password){	
-				$a = $auth->change_password($new_password);
+				$a = $auth->change_password($params['confirm_new_password']);
+
+	 			
+				$json['msg']='Password changed successfully';
+				$json['status'] = true;	
+				ob_start();
+				// do initial processing here
+				echo json_encode($json); // send the response
+				header('Connection: close');
+				header('Content-Length: '.ob_get_length());
+				ob_end_flush();
+				ob_flush();
+				flush();
 				$email = array(
 					'from'=> SUPPORT_EMAIL, 
-					'to'=>$email,
-					'subject'=>'Password Changed @CubeHMS',
+					'to'=>$un,
+					'subject'=>'Change Password @CubeHMS',
 					'body'=>'We have received your request to change your password, please use the below credentials to access.<br/>username: '.$un.'<br/>password: '.$params['new_password'].''
 				); 
 				
 				$email_string = http_build_query($email);
-				$sms ="Password Changed. Username:".$un." Password:".$params['new_password'];
+				$sms ="Change Password. Username:".$un." Password:".$params['new_password'];
 	 			curl_mail($email_string);
 	 			SendSMS($mobile, $sms);		
-	 			ob_clean();			
-				
-				$json['msg']='Password changed successfully';
-				$json['status'] = true;
 			}else{
 				$json['msg']='Password do not match';
 				$json['status'] = false;
+				echo json_encode($json);
 			}
-			echo json_encode($json);
+			
+			
 		break;
 
 		case 'get_clinic_details':
@@ -646,6 +775,7 @@ switch ($request_method){
 			$user['username'] = $params['form']['email'];
 			$user['email'] = $params['form']['email'];
 			$user['password'] = md5($params['form']['password']);
+			$user['password_text']= $params['form']['password'];
 			$user['password_hash'] = md5(todays_datetime().$params['form']['password']);
 			$user['first_name'] = $params['form']['first_name'];
 			$user['middle_name'] = $params['form']['middle_name'];
@@ -679,7 +809,7 @@ switch ($request_method){
 			$clinic['created_on'] = todays_datetime();
 			$clinic['created_by'] = $user_id;
 			$clinic_id = $obj->create($clinic);
-			$obj->update_clinic_code(array('clinic_code'=>'C'.$clinic_id), array('id'=>$clinic_id));
+			
 
 			$doctor = array();
 			$doctor['first_name'] = $params['form']['first_name'];
@@ -702,7 +832,9 @@ switch ($request_method){
 			$nurse = array();
 			$nurse['username']="nurse_C".$clinic_id.'@cubehms.net';
 			$nurse['email']="nurse_C".$clinic_id.'@cubehms.net';
-			$nurse['password']=md5("nurse");
+			$nurse_password = "Nurse@".rand(1234,2345);
+			$nurse['password_text']= $nurse_password;
+			$nurse['password']=md5($nurse_password);
 			$nurse['clinic_id']=$clinic_id;
 			$nurse['rights'] = 'a:7:{s:5:"admin";s:1:"0";s:12:"clinic_admin";s:1:"0";s:6:"doctor";s:1:"0";s:7:"patient";s:1:"0";s:5:"nurse";s:1:"1";s:12:"receptionist";s:1:"0";s:11:"promo_agent";s:1:"0";}'; 
 			
@@ -710,20 +842,22 @@ switch ($request_method){
 
 			$reception['username']="reception_C".$clinic_id.'@cubehms.net';
 			$reception['email']="reception_C".$clinic_id.'@cubehms.net';
-			$reception['password']=md5("reception");
+			$rec_password = "Reception@".rand(4444,9999);
+			$reception['password']=md5($rec_password);
+			$reception['password_text']= $rec_password;
 			$reception['clinic_id']=$clinic_id;
 			$reception['rights']='a:7:{s:5:"admin";s:1:"0";s:12:"clinic_admin";s:1:"0";s:6:"doctor";s:1:"0";s:7:"patient";s:1:"0";s:5:"nurse";s:1:"0";s:12:"receptionist";s:1:"1";s:11:"promo_agent";s:1:"0";}';
 			$obj->principal_doctor_user_create($reception);
 
 			$d= $obj->principal_doctor_create($doctor);
-
+			$obj->update_clinic_code(array('clinic_code'=>'C'.$clinic_id, 'doctor_master_id'=>$d), array('id'=>$clinic_id));
 			$slot = new Slot();
 			$slot->create_defaults(array('user_id'=>$user_id, 'doctor_id'=>$d));
 			$email = array(
 				'from'=> SUPPORT_EMAIL, 
 				'to'=>$user['email'],
-				'subject'=>'New Clinic Registration @CubeHMS',
-				'body'=>'Hello '.$user['first_name'].', Your clinic <b>'.$params['form']['clinic_name'].'</b> has been registered.<br> <a href="'.CMS_PATH.'confirm.php?hash='.$user['password_hash'].'">Click Here to Complete registration process</a><br><br><table border="1"><tr><th>Type</th><th>Username</th><th>Password</th></tr><tr><th>Principal Doctor</th><td>'.$user['email'].'</td><td>'.$params['form']['password'].'</td></tr><tr><th>Nurse</th><td>'.$nurse['username'].'</td><td>nurse</td></tr><tr><th>Receptionist</th><td>'.$reception['username'].'</td><td>reception</td></tr></table>'); 
+				'subject'=>'Clinic Registration @CubeHMS',
+				'body'=>'Welcome to CubeHMS<br/>, Your clinic <b>'.$params['form']['clinic_name'].'</b> is sucessfully registered with us, please use the below credentials to access.<br><br><table border="1"><tr><th>Type</th><th>Username</th><th>Password</th></tr><tr><th>Principal Doctor</th><td>'.$user['email'].'</td><td>'.$params['form']['password'].'</td></tr><tr><th>Nurse</th><td>'.$nurse['username'].'</td><td>'.$nurse_password.'</td></tr><tr><th>Receptionist</th><td>'.$reception['username'].'</td><td>'.$rec_password.'</td></tr></table><br><br> <a href="'.CMS_PATH.'confirm.php?hash='.$user['password_hash'].'">Click Here to Activate your account</a>'); 
 			
 			$email_string = http_build_query($email);
 			$sms ="Your clinic is sucessfully registered with us. Username:".$params['form']['email']." Password:".$params['form']['password'];
@@ -822,6 +956,24 @@ switch ($request_method){
 					$json['msg'] = "Doctor Added";
 					$json['status'] = true;	
 					echo json_encode($json);	
+
+					ob_start();
+					echo json_encode($json);
+					header('Connection: close');
+					header('Content-Length: '.ob_get_length());
+					ob_end_flush();
+					ob_flush();
+					flush();
+
+					$email = array(
+						'from'=> SUPPORT_EMAIL, 
+						'to'=>$arr['email_1'],
+						'subject'=>'Attached Clinic @CubeHMS',
+						'body'=>'Welcome to CubeHMS<br/>'.$arr['email_1'].', is sucessfully added to clinic '.current_clinic_name().', please use your valid credentials to access!'); 
+					
+					$email_string = http_build_query($email);
+					curl_mail($email_string);
+
 				}else{
 					unset($params['user_id']);
 					$user = array();
@@ -874,17 +1026,23 @@ switch ($request_method){
 					$json['msg'] = "Doctor Added";
 					$json['status'] = true;				
 			 
-					
+
+					ob_start();
+					echo json_encode($json);
+					header('Connection: close');
+					header('Content-Length: '.ob_get_length());
+					ob_end_flush();
+					ob_flush();
+					flush();
+
 					$email = array(
 						'from'=> SUPPORT_EMAIL, 
 						'to'=>$user['email'],
-						'subject'=>'New Registration @CubeHMS as Doctor @'.current_clinic_name(),
-						'body'=>'Hello '.$user['first_name'].', You have beed added at clinic <b>'.current_clinic_name().'</b> as doctor.<br> <a href="'.CMS_PATH.'confirm.php?hash='.$user['password_hash'].'">Click Here to Complete registration process</a><br><br><table border="1"><tr><th>Type</th><th>Username</th><th>Password</th></tr><tr><th>Doctor</th><td>'.$user['email'].'</td><td>'.$params['password'].'</td></tr></table>'); 
+						'subject'=>'New User @CubeHMS',
+						'body'=>'Welcome to CubeHMS<br/>'.$user['email'].', is sucessfully registered with us and added to clinic '.current_clinic_name().', please use the below  credentials to access.<br><table border="1"><tr><th>Type</th><th>Username</th><th>Password</th></tr><tr><th>Doctor</th><td>'.$user['email'].'</td><td>'.$params['password'].'</td></tr></table><br><br> <a href="'.CMS_PATH.'confirm.php?hash='.$user['password_hash'].'">Click Here to Complete registration process</a>'); 
 					
 					$email_string = http_build_query($email);
 					curl_mail($email_string);
-					ob_clean();
-					echo json_encode($json);
 
 				}				
 			break;	
@@ -1083,5 +1241,24 @@ function role(){
 		$curl_scraped_page = curl_exec($ch);
 		curl_close($ch);
 		echo $curl_scraped_page;	      
+    }
+
+    function check_if_blocked($date, $doc)
+    {		$date = strtotime($date);
+
+			$obj = new ManageDoctors();
+			$data = $obj->get_doc_master_id_using_user_id($doc);
+
+			$doctor_master_id = $data['id'];
+
+			$recs = $obj->get_availability();
+
+			$flag = false;
+			foreach ($recs as $key => $value) {
+				if($value['doctor_id']== $doctor_master_id && $date>=strtotime($value['frm']) && $date< strtotime($value['resume']) && $value['block_appointments']=='yes'){
+					$flag = true;
+				}
+			}
+			return $flag;
     }
 ?>

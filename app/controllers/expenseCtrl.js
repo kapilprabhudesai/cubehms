@@ -26,7 +26,20 @@ app.controller('expenseCtrl', function($scope, $http) {
       $('#new_expense_type_modal').modal({ show: true});
     }
 
+
+	$( "#type_id" ).change(function() {
+	  var cid = $(this).val();
+	  $scope.expense.type_id = cid;
+	});
+
+
 	$scope.save = function(){
+		console.log($scope.expense);
+		$scope.expense.date = $("#date").val();
+		if($scope.expense.date=='' || $scope.expense.type_id=='' || $scope.expense.amount=='' || $scope.expense.remark==''){
+			$.jGrowl("All Fields Mandatory!");
+			return false;
+		}
 		$scope.expense.date = $("#date").val();
 		var params =  {
 		        action: "add_expense",

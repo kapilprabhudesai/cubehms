@@ -5,7 +5,7 @@ app.controller('clinicDashboardCtrl', function($scope, $http) {
 	$scope.appointment_date = "";
 	$scope.appointment_doctors = [];
 	$scope.appointment_selected_doctor = "";
-
+	$scope.searchKeyword="";
 	$scope.print_fitness = function(divName) {
 	var printContents = document.getElementById(divName).innerHTML;
 	var popupWin = window.open('', '_blank', 'width=300,height=300');
@@ -151,9 +151,9 @@ app.controller('clinicDashboardCtrl', function($scope, $http) {
 	}
 
 	$scope.reset_patient_actions = function(){
-		$scope.patient_actions = [{name:'Edit Patient', link:'#/add_patient?id='},{name:'Book Appointment', link:'#/book_appointment?id='},{name:'Fitness Certificate', link:'#/add_fitness?id='}];		
+		$scope.patient_actions = [{icon:'icon-edit',name:'Edit Patient', link:'#/add_patient?id='},{icon:'icon-book',name:'Book Appointment', link:'#/book_appointment?id='},{icon:'icon-stethoscope',name:'Fitness Certificate', link:'#/add_fitness?id='}];		
     	if($scope.clinic.print_reg_slip=="true"){
-			$scope.patient_actions.push({name:'Print Slip', link:'#/add_fitness?reg='});		
+			$scope.patient_actions.push({icon:'icon-print',name:'Print Slip', link:'#/add_fitness?reg='});		
     	}		
 	}
 
@@ -171,7 +171,9 @@ app.controller('clinicDashboardCtrl', function($scope, $http) {
 	    })
 	    .then(function(res){
 	    	$scope.clinic = res.data;
-	    	console.log($scope.clinic);
+	    	if($scope.clinic.configured==0){
+	    		location.href="#/edit_clinic_details";
+	    	}
 	    }, function(){
 
 	    });

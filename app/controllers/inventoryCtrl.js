@@ -41,6 +41,10 @@ app.controller('inventoryCtrl', function($scope, $http) {
     }
 
 	$scope.save = function(){
+		if($scope.item.name=='' || $scope.item.type_id=='' || $scope.item.sub_type_id=='' ||  $scope.item.uom=='' || $scope.item.danger_level =='' || $scope.item.status==''){
+			$.jGrowl("All Fields Mandatory!");
+			return false;
+		}
 		var params =  {
 		        action: "inventory_save_item",
 		        item:$scope.item

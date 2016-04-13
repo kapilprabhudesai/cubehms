@@ -64,6 +64,10 @@ class ManageClinics{
 		 return $this -> db -> getResultSet();
 	}
 
+	public function get_clinic(){
+		 $this -> db -> query("select * from clinic_master where id='".clinic()."'");
+		 return $this -> db -> getResultSet();
+	}
 
 
 

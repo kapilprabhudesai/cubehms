@@ -21,7 +21,7 @@
             </div>
 
             <div class='form-group'>
-              <label>Doctor First Name</label>
+              <label>Doctor First Name<font style="color:red">*</font></label>
               <input class="form-control" id='first_name' ng-model='doctor.first_name' type="text">
             </div>
             <div class='form-group'>
@@ -29,11 +29,11 @@
               <input class="form-control" id='middle_name' ng-model='doctor.middle_name' type="text">
             </div>
             <div class='form-group'>
-              <label>Doctor Last Name</label>
+              <label>Doctor Last Name<font style="color:red">*</font></label>
               <input class="form-control" id='last_name' ng-model='doctor.last_name' type="text">
             </div>
             <div class='form-group'>
-              <label>Mobile No</label>
+              <label>Mobile No<font style="color:red">*</font></label>
               <input class="form-control" placeholder="+91 9673173727" id="mobile_no_1" name="mobile_no_1" ng-model="doctor.mobile_no_1" type="text" required  ng-pattern="validate_mobile_no">
               <span style="color:red" ng-if="myForm.mobile_no_1.$error.required">Mobile Number Is Mandatory</span>
               <span style="color:red" ng-if="myForm.mobile_no_1.$error.pattern"><br>Invalid Mobile No</span>
@@ -46,7 +46,7 @@
 
 
             <div class='form-group'>
-              <label>Email 1</label>
+              <label>Email 1<font style="color:red">*</font></label>
               <input class="form-control" data-rule-email="true" data-rule-required="true" id="email_1" name="email_1" ng-model="doctor.email_1" placeholder="E-mail 1" type="text">
             </div>
 
@@ -75,21 +75,21 @@
             </div>
 
             <div class='form-group'>
-              <label>Country</label>
+              <label>Country<font style="color:red">*</font></label>
               <select  class="select2 form-control" id="country_id" ng-model="doctor.country_id">
               <option value="">Choose...</option>
               <option ng-repeat="option in countries" value="{{option.id}}" ng-selected="{{option.id == doctor.country_id}}">{{option.name}}</option>
               </select>
             </div>
             <div class='form-group'>
-              <label>State</label>
+              <label>State<font style="color:red">*</font></label>
               <select  class="select2 form-control" id="state_id" ng-model="doctor.state_id">
               <option value="">Choose...</option>
               <option ng-repeat="option in states" value="{{option.id}}" ng-selected="{{option.id == doctor.state_id}}">{{option.name}}</option>
               </select>
             </div>
             <div class='form-group'>
-              <label>City</label>
+              <label>City<font style="color:red">*</font></label>
               <select  class="select2 form-control" id="city_id" ng-model="doctor.city_id">
               <option value="">Choose...</option>
               <option ng-repeat="option in cities" value="{{option.id}}" ng-selected="{{option.id == doctor.city_id}}">{{option.name}}</option>
@@ -103,12 +103,12 @@
               </select>
             </div>
             <div class='form-group'>
-              <label>Address</label>
+              <label>Address<font style="color:red">*</font></label>
               <textarea rows="1" id="address" ng-model="doctor.address" class="autosize form-control" placeholder="Address" style="overflow: hidden; word-wrap: break-word; resize: horizontal;"></textarea>
             </div>
 
             <div class='form-group'>
-              <label>Specialties</label>
+              <label>Specialties<font style="color:red">*</font></label>
               <select  class="select2 form-control" id="specialties" ng-model="selected_specialties" multiple>
               <option value="">Choose...</option>
               <option ng-repeat="option in specialties" value="{{option.id}}" ng-selected="check_if_specialty_selected(option.id)">{{option.name}}</option>

@@ -43,6 +43,33 @@ app.controller('fitnessCtrl', function($scope, $http, $routeParams) {
 		$scope.fitness.frm = $("#from").val();
 		$scope.fitness.till = $("#till").val();
 		$scope.fitness.resume = $("#resume").val();
+		
+		if($scope.fitness.frm=='' || $scope.fitness.till=='' || $scope.fitness.resume=='' || $scope.fitness.name=='' || $scope.fitness.charges=='' ){
+			$.jGrowl("All Fields Mandatory!");
+			return false;
+		}
+
+		var fm = new Date($("#from").val());
+		var tl = new Date($("#till").val());
+		var re = new Date($("#resume").val());
+		var td = new Date().toJSON().slice(0,10);
+		var td = new Date(td);
+
+		console.log(fm);
+		console.log(tl);
+		console.log(re);
+		console.log(td);
+
+		if(tl<fm){
+			$.jGrowl("TILL Date Should be Greater than or equal to FROM date");
+			return false;
+		}
+		else if(re<tl){
+			$.jGrowl("RESUME Date Should be Greater than or equal to TILL date");
+			return false;
+		}
+
+
 		var params =  {
 		        action: "issue_fitness",
 		        fitness:$scope.fitness
@@ -163,7 +190,7 @@ $scope.printslip = function(json) {
     var w = window.open();
     w.document.write('<html><head><title>Registration Slip</title></head>');
     w.document.write('<body><center><h3>Registration Slip</h3></center>');
-    w.document.write('<table border="1">');
+    w.document.write('<center><table border="1">');
 	w.document.write('<tr><th>Patient ID</th><td>'+json.id+'</td>');
 	var d = new Date(json.created_on);
 	w.document.write('<tr><th>Registration Date</th><td>'+d.toDateString()+'</td>');
@@ -172,7 +199,7 @@ $scope.printslip = function(json) {
 	var dob = new Date(json.dob);
 	var today = new Date();
 	w.document.write('<tr><th>DOB</th><td>'+dob.toDateString()+'</td>');
-    w.document.write('</table>');
+    w.document.write('</table></center>');
     w.document.write('</body>');
     w.document.write('</html>');
     w.window.print();

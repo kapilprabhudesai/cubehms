@@ -3,6 +3,7 @@
     <div class='box bordered-box red-border' style='margin-bottom:0;'>
       <div class='box-header red-background'>
         <div class='title'>Patients List</div>
+        <input type="text" placeholder="Search Patient Details" class="pull-right form-control" ng-model="searchKeyword">
       </div>
       <div class='box-content box-no-padding'>
         <div class='responsive-table'>
@@ -18,7 +19,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="p in patients track by $index">
+                <tr ng-repeat="p in patients| filter: searchKeyword track by $index  ">
                   <td><input data-rule-required="true" id="patient_id" name="patient_id" type="radio" ng-click="patient_selected($index,p.patient_id)"></td>
                   <td>{{p.name}}</td>
                   <td>{{p.mobile_no_1}}</td>
@@ -133,7 +134,7 @@
             <div class="box-quick-link red-background">
               <a onclick="$('#patient_selected_model').modal('hide');" href="{{action.link}}">
                 <div class="header">
-                  <div class="icon-inbox"></div>
+                  <div class="{{action.icon}}"></div>
                 </div>
                 <div class="content">{{action.name}}</div>
               </a>

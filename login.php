@@ -46,9 +46,19 @@
                     </div-->
                     <button type="submit" ng-disabled="!myForm.$valid" class='btn btn-success btn-block'>Sign in</button>
                   </form>
+                  <form id="forgot-form" name="forgotForm" class='validate-form' method='post' style="display:none">
+                    <div class='form-group'>
+                      <div class='controls with-icon-over-input'>
+                        <input autocomplete="off" class="form-control" ng-model="email" id="forgot_email" name="email" placeholder="E-mail" type="email" required>
+                        <i class='icon-user text-muted'></i>
+                        <span ng-show="forgotForm.email.$error.required">Please Enter Your Email</span>
+                      </div>
+                    </div>
+                    <button type="submit" ng-disabled="!forgotForm.$valid" class='btn btn-success btn-block'>Reset Password</button>
+                  </form>
                   <div class='text-center'>
                     <hr class='hr-normal'>
-                    <a href='register_clinic.php'>Havent Registered Yet?</a>
+                    <a href='register_clinic.php'>Havent Registered Yet?</a> | <a href='javascript:show_forgot_password_form()'>Forgot Password</a>
                   </div>
                 </div>
               </div>
@@ -58,7 +68,11 @@
       </div>
     </div>
 <script>
-
+function show_forgot_password_form(){
+  $("#sign-in").hide();
+  $("#title").html("Reset Password");
+  $("#forgot-form").show();
+}
 var app = angular.module('loginApp', []);
 app.controller('usrCtrl', function($scope) {
     $scope.email = "";

@@ -51,14 +51,14 @@ $emails = all_user_emailids();
                   <div class='form-group'>
                     <label>Clinic Name<font style="color:red">*</font></label>
                     <input class="form-control" id='clinic_name' name='clinic_name' ng-model='register.clinic_name' type="text" required>
-                    <span style="color:#b94a48" ng-if="myForm.clinic_name.$error.required">Clinic Name Is Mandatory</span>
+                    <span style="color:#b94a48" ng-if="myForm.clinic_name.$error.required && myForm.clinic_name.$dirty">Clinic Name Is Mandatory</span>
                   </div>
 
                   <div class='form-group'>
                     <label>Principal Doctor First Name<font style="color:red">*</font></label>
                     <input class="form-control" id='first_name' name='first_name' ng-model='register.first_name' type="text" required ng-pattern="/^[a-zA-Z]*$/">
-                    <span style="color:#b94a48" ng-if="myForm.first_name.$error.required">First Name Is Mandatory</span>
-                    <span style="color:#b94a48" ng-if="myForm.first_name.$error.pattern">Please Enter Valid Name</span>
+                    <span style="color:#b94a48" ng-if="myForm.first_name.$error.required && myForm.first_name.$dirty">First Name Is Mandatory</span>
+                    <span style="color:#b94a48" ng-if="myForm.first_name.$error.pattern && myForm.first_name.$dirty">Please Enter Valid Name</span>
                   </div>
                   <div class='form-group'>
                     <label>Principal Doctor Middle Name<font style="color:red">*</font></label>
@@ -68,8 +68,8 @@ $emails = all_user_emailids();
                   <div class='form-group'>
                     <label>Principal Doctor Last Name<font style="color:red">*</font></label>
                     <input class="form-control" id="last_name" name="last_name" ng-model="register.last_name" type="text" required ng-pattern="/^[a-zA-Z]*$/">
-                    <span style="color:#b94a48" ng-if="myForm.last_name.$error.required">Last Name Is Mandatory</span>
-                    <span style="color:#b94a48" ng-if="myForm.last_name.$error.pattern">Please Enter Valid Name</span>
+                    <span style="color:#b94a48" ng-if="myForm.last_name.$error.required && myForm.last_name.$dirty">Last Name Is Mandatory</span>
+                    <span style="color:#b94a48" ng-if="myForm.last_name.$error.pattern && myForm.last_name.$dirty">Please Enter Valid Name</span>
                   </div>
 
                     <div class='form-group'>
@@ -77,8 +77,8 @@ $emails = all_user_emailids();
                       <div class='controls with-icon-over-input'>
                         <input autocomplete="off" class="form-control" id="email" name="email" placeholder="E-mail"  ng-keyup="is_unique()" type="email"ng-model="register.email"  required>
                         <i class='icon-user text-muted'></i>
-                          <span style="color:#b94a48" ng-show="myForm.email.$error.required">Email Is Mandatory</span>
-                           <span style="color:#b94a48" ng-if="myForm.email.$error.unique">Email Already Registered</span>
+                          <span style="color:#b94a48" ng-show="myForm.email.$error.required && myForm.email.$dirty">Email Is Mandatory</span>
+                           <span style="color:#b94a48" ng-if="myForm.email.$error.unique && myForm.email.$dirty">Email Already Registered</span>
                       </div>
                     </div>
                     <div class='form-group'>
@@ -103,9 +103,9 @@ $emails = all_user_emailids();
                     <div class='form-group'>
                       <label>Mobile No<font style="color:red">*</font></label>
                       <input class="form-control" placeholder="+91 9673173727" ng-keyup="is_unique_mobile()" id="mobile_no_1" name="mobile_no_1" ng-model="register.mobile_no_1" type="text" required  ng-pattern="validate_mobile_no">
-                      <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.required">Mobile Number Is Mandatory</span>
-                      <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.pattern"><br>Invalid Mobile No</span>
-                      <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.unique_mobile">Mobile No Already Registered</span>
+                      <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.required && myForm.mobile_no_1.$dirty">Mobile Number Is Mandatory</span>
+                      <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.pattern && myForm.mobile_no_1.$dirty"><br>Invalid Mobile No</span>
+                      <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.unique_mobile && myForm.mobile_no_1.$dirty">Mobile No Already Registered</span>
                     </div>
             <div class='form-group'>
               <label>Country<font style="color:red">*</font></label>

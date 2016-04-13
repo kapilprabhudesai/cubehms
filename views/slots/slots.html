@@ -28,7 +28,7 @@
 			<th>{{key}}</th>
 			<td ng-repeat="s in sl track by $index">
 				<div style="font-size:12px;height:300px;overflow-y:scroll;overflow-y: scroll;">
-					<p ng-repeat="v in value"><input id="{{key}}_{{s}}_{{$index+1}}" ng-click="set_val(key,s,$index+1)" class="{{key}}_{{s}}" ng-disabled="v.availability" type="checkbox">{{v.slot}}</p>
+					<p ng-repeat="v in value[s]"><input id="{{key}}_{{s}}_{{$index+1}}" ng-click="set_val(key,s,$index+1)" class="{{key}}_{{s}}" ng-disabled="v.availability==1" ng-checked="v.availability==2" type="checkbox">{{v.slot}}</p>
 				</div>
 			</td>
 		</tr>

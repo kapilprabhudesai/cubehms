@@ -2,9 +2,12 @@
 app.controller('clinicCtrl', function($scope, $http) {
 	$scope.clinic = {};
 	$scope.countries = [];
-	$scope.states = [];
-	$scope.cities = [];
-	$scope.areas = [];
+	$scope.states    = [];
+	$scope.cities    = [];
+	$scope.areas     = [];
+
+	$scope.old_mobile_1 = "";
+	$scope.old_mobile_2 = "";
 
     $scope.validate_mobile_no = (function() {
         var regexp = /^(\+91[\-\s]?)\d{10}$/;
@@ -15,6 +18,76 @@ app.controller('clinicCtrl', function($scope, $http) {
         };
     })();
 
+    $scope.is_unique_mobile = function(){
+        var field =$scope.myForm.mobile_no_1;
+        var typed_text =field.$viewValue;
+        $scope.myForm.mobile_no_1.$setValidity('unique_mobile', '');
+        
+        if(typed_text.length==14 && typed_text!=$scope.old_mobile_1){
+          var arr = [];
+          var params =  {
+                action: "is_unique_mobile",
+                str:typed_text
+            };
+         var serializedData = $.param(params);
+          $http({
+              url: CMS_PATH+"inc/functions.php",
+              method: "POST",
+              data: serializedData
+          })
+          .then(function(res){
+            var found = res.data;
+            if($scope.old_mobile_1==$scope.old_mobile_2){
+                 $scope.myForm.mobile_no_1.$setValidity('unique_mobile', false);
+            }
+            else if(found==0){
+            	$scope.myForm.mobile_no_1.$setValidity('unique_mobile', '');
+            }else{
+                 $scope.myForm.mobile_no_1.$setValidity('unique_mobile', false);
+            }
+          });
+        }
+        }
+
+
+    $scope.is_unique_mobile2 = function(){
+        var field =$scope.myForm.mobile_no_2;
+        
+        var typed_text =field.$viewValue;
+        $scope.myForm.mobile_no_2.$setValidity('unique_mobile2', '');
+        
+        if(typed_text.length==14 && typed_text!=$scope.old_mobile_2){
+          var arr = [];
+          var params =  {
+                action: "is_unique_mobile",
+                str:typed_text
+            };
+         var serializedData = $.param(params);
+          $http({
+              url: CMS_PATH+"inc/functions.php",
+              method: "POST",
+              data: serializedData
+          })
+          .then(function(res){
+            var found = res.data;
+ 
+            if($scope.clinic.mobile_no_1==typed_text){
+            	console.log("eq");
+            	$scope.myForm.mobile_no_2.$setValidity('unique_mobile2', false);
+            }
+            else if(found==0){
+                 $scope.myForm.mobile_no_2.$setValidity('unique_mobile2', '');
+            }
+            else{
+                 $scope.myForm.mobile_no_2.$setValidity('unique_mobile2', false);
+            }
+          });
+        }
+        }
+
+   $scope.pdd = function(){
+   	location.href="#/add_doctor?id="+$scope.clinic.doctor_master_id;
+   }
   $scope.save_new_area = function(){
     if($scope.new_area==''){
       $('#new_area_modal').modal('hide');
@@ -53,6 +126,12 @@ app.controller('clinicCtrl', function($scope, $http) {
 
 
 	$scope.save = function(){
+		$scope.clinic.configured=1;
+		if($scope.clinic.mobile_no_1=='' || $scope.clinic.landline_1=='' || $scope.clinic.country_id=='' || $scope.clinic.state_id=='' || $scope.clinic.city_id=='' ){
+			$.jGrowl("Fill Mandatory Fields!");
+			return false;
+		}
+
 		var params =  {
 		        action: "update_clinic",
 		        clinic:$scope.clinic
@@ -88,7 +167,9 @@ app.controller('clinicCtrl', function($scope, $http) {
 	    .then(handleSuccess, handleError);		
 	    function handleSuccess(res){
 	    	$scope.clinic = res.data;
-	    	 
+	    	$scope.old_mobile_1 = res.data.mobile_no_1;
+	    	$scope.old_mobile_2 = res.data.mobile_no_2;
+
 	    	if(res.data.print_reg_slip == "true"){
 	    		$scope.clinic.print_reg_slip = true;
 	    	}else{

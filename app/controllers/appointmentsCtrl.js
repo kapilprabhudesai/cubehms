@@ -95,9 +95,9 @@ app.controller('appointmentsCtrl', function($scope, $http, $routeParams) {
 	    })
 	    .then(function(res){
 	    	if(res.data.status == true){
-	    		$.jGrowl(res.data.msg);
 	    		setTimeout(function(){location.href="#clinic_dashboard";},2000);
 	    	}
+	    	$.jGrowl(res.data.msg);
 	    }, function(){
 
 	    });				

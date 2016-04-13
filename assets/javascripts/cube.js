@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	console.log("-----DOCUMENT LOADED-----------");
 	$("input").attr("autocomplete","off");
-	
+
 	$("#sign-in").submit(function(event){
 		event.preventDefault();
 		var email = $("#email").val();
@@ -27,6 +27,21 @@ $(document).ready(function(){
 		.fail( function(xhr, textStatus, errorThrown) {
 			$.jGrowl(textStatus);
 		});
+	});	
+
+	$("#forgot-form").submit(function(event){
+		event.preventDefault();
+		var email = $("#forgot_email").val();
+
+		var obj = {
+			action:'forgot',
+			email: email
+		};
+
+		$.post(CMS_PATH+"inc/functions.php", obj)
+		.done( function(data) {
+			console.log(data);
+		})
 	});	
 })
 

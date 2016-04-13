@@ -49,6 +49,10 @@ app.controller('doctorsCtrl', function($scope, $http, $routeParams) {
 	};
 	
 	$scope.save = function(){
+		if($scope.doctor.first_name==''||$scope.doctor.last_name==''||$scope.doctor.address==''||$scope.doctor.email_1==''|| $scope.doctor.mobile_no_1==''||$scope.doctor.country_id==''||$scope.doctor.state_id==''||$scope.doctor.city_id==''){
+			$.jGrowl("Fill Mandatory Fields!");
+			return false;
+		}
 		var params =  {
 		        action: "add_doctor",
 		        doctor:$scope.doctor
@@ -202,6 +206,11 @@ app.controller('doctorsCtrl', function($scope, $http, $routeParams) {
    	$( "#doctor_id" ).change(function() {
 	  var aid = $(this).val();
 	  $scope.availability.doctor_id = aid;
+	});
+
+	$( "#block_appointments" ).change(function() {
+	  var aid = $(this).val();
+	  $scope.availability.block_appointments = aid;
 	});  
 
 
@@ -263,7 +272,36 @@ app.controller('doctorsCtrl', function($scope, $http, $routeParams) {
 		$scope.availability.frm = $("#from").val();
 		$scope.availability.till = $("#till").val();
 		$scope.availability.resume = $("#resume").val();
-		$scope.availability.block_appointments = 'yes';	
+		
+		if($scope.availability.frm=='' ||$scope.availability.till=='' ||$scope.availability.resume=='' ||$scope.availability.doctor_id=='' ||$scope.availability.remark=='' ||$scope.availability.block_appointments==''){
+			$.jGrowl("All Fields Mandatory!");
+			return false;
+		}
+
+		var fm = new Date($("#from").val());
+		var tl = new Date($("#till").val());
+		var re = new Date($("#resume").val());
+		var td = new Date().toJSON().slice(0,10);
+		var td = new Date(td);
+
+		console.log(fm);
+		console.log(tl);
+		console.log(re);
+		console.log(td);
+
+		if(fm<td){
+			$.jGrowl("FROM Date Should be Greater than or equal to TODAYS date");
+			return false;
+		}else if(tl<fm){
+			$.jGrowl("TILL Date Should be Greater than or equal to FROM date");
+			return false;
+		}
+		else if(re<tl){
+			$.jGrowl("RESUME Date Should be Greater than or equal to TILL date");
+			return false;
+		}
+
+
 		var params =  {
 		        action: "save_availability",
 		        availability:$scope.availability
@@ -278,7 +316,7 @@ app.controller('doctorsCtrl', function($scope, $http, $routeParams) {
 	    })
 	    .then(function(res){
 	    	$scope.get_availabilities();
-	    	$.jGrowl(res.data);
+	    	$.jGrowl("All Appointments Cancelled During This Time Span.");
 	    }, function(){
 
 	    });				

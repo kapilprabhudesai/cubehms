@@ -42,6 +42,11 @@ class ManageDoctors{
 	public function fill_user_details($id){
 		$this -> db -> query("SELECT * from ".$this->tableName." where id = '".$id."'");
 		return $this -> db -> getResultSet();
+	}
+
+	public function get_user_details($id){
+		$this -> db -> query("SELECT * from users where id = '".$id."'");
+		return $this -> db -> getResultSet();
 	}	
 
 	public function update_user($params, $where){
@@ -54,5 +59,21 @@ class ManageDoctors{
 	public function doctor_update($params, $where){
 		return $this -> db ->  updateDataIntoTable($params, $where, $this->tableName);
 	}
+
+	public function get_user_id_using_doc_master_id($id){
+		$q = "SELECT user_id from doctor_master where id='".$id."'";
+		$this -> db -> query($q);
+		$data = $this -> db -> getResultSet();		
+		return $data[0];
+	}
+
+
+	public function get_doc_master_id_using_user_id($id){
+		$q = "SELECT id from doctor_master where user_id='".$id."' and clinic_id='".clinic()."'";
+		$this -> db -> query($q);
+		$data = $this -> db -> getResultSet();		
+		return $data[0];
+	}
+	
 }
 ?>
