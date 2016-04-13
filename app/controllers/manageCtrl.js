@@ -709,5 +709,21 @@ $scope.change_fee = function(id){
         var id = $(this).val();
         $scope.drug_type_id = id;
     });   
-  
+
+$scope.bpp = function() {
+    var w = window.open();
+    w.document.write('<html><head><title>Bill/Prescription</title></head>');
+    w.document.write('<body><center><h3>Bill/Prescription</h3></center>');
+    w.document.write('<center><table border="1">');
+    w.document.write('<tr><th>Clinic Name</th><td>'+$scope.clinic.clinic_name+'</td></tr>');
+    w.document.write('<tr><th>Patient Name</th><td>'+$scope.patient.first_name+' '+$scope.patient.last_name+'</td></tr>');
+    w.document.write('<tr><th>Doctor Name</th><td>'+$scope.doctor.first_name+' '+$scope.doctor.last_name+'</td></tr>');
+    w.document.write('<tr><th>Charges</th><td>'+$scope.treatment.amount+'</td></tr>');
+    w.document.write('</table></center>');
+    w.document.write('<center><h3>Prescription</h3>'+document.getElementById("presc").outerHTML+'</center>');
+    w.document.write('</body>');
+    w.document.write('</html>');
+    w.window.print();
+    w.document.close();
+}  
 });

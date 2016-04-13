@@ -40,7 +40,8 @@ $(document).ready(function(){
 
 		$.post(CMS_PATH+"inc/functions.php", obj)
 		.done( function(data) {
-			console.log(data);
+			alert("Please Check Mail to see the password");
+			location.reload();
 		})
 	});	
 })

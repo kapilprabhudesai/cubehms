@@ -1,0 +1,25 @@
+Notes:
+
+1. Remove +91 From all forms
+2. Duplicate Do not Allow (not case sensitive)
+3. Red Mark on register screen mobile
+4. Doctor master search filter - name(check max)/email/mobile
+5. Handle duplicate entries clicking 2ce
+6. Merge Fees and %ge
+7. Fetch Specialities from DB
+8. Forgot Password check email /sms
+9. Configuration templates for email/sms with placeholder
+10. Slot labels to morning evening and add valid till
+11. strikeout slots after disabling
+12. slots collapsible
+13. 1 block of Slot evey grp of tick will b treated as slot & valid till date. If patient taken appointment and alters slots, it shud b treated as doctor unavailability feature.
+14. Age and Gender along with set fields on listing. remove addrr add city, by default no listinh
+15. COlor code as per patient ownership
+16. Add patient remove search
+17. Remove Charges from fitness cert report
+18. 3 banners hardcoded.
+19. Dashboard Stats.. complete counter inc aft submission from manage
+20. validations in manage
+21. Done button in appointment listing
+22. Referal type investigation/clinic
+23. 

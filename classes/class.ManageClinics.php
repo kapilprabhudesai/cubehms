@@ -4,11 +4,25 @@ class ManageClinics{
 	private $db;
 	private $tableName;
 
+
 	public function __construct(){
 		$this->tableName = 'clinic_master';
 		$this->db = Database::Instance();
 	}
 
+	public function dashboard_stats(){
+		$sql ="SELECT count(id) as total, sum(patient_arrived) as completed from patient_appointments WHERE appointment_date='".date('Y-m-d')."' and cancel=0 and clinic_id='".clinic()."'";	
+		$this -> db -> query($sql);
+		$data =  $this -> db -> getResultSet();
+		$arr = array();
+		$arr['total'] = intval($data[0]['total']);
+		$arr['completed'] = $data[0]['completed'];
+		if($data[0]['completed'] == null || $data[0]['completed'] == ''){
+			$arr['completed'] = 0;
+		}
+		$arr['pending'] =$arr['total'] - $arr['completed'];
+		return $arr;
+	}
 	public function add_investigation($str){
 		$params = array('clinic_id'=>$_SESSION['current_clinic'], 'name'=>$str);
 		return $this -> db -> insertDataIntoTable($params, 'investigation_master');

@@ -10,6 +10,43 @@ app.controller('doctorsCtrl', function($scope, $http, $routeParams) {
 	$scope.selected_specialties="";
 	$scope.search_doctor_text = "";
 	$scope.doctors = [];
+
+  $scope.save_new_area = function(){
+    if($scope.new_area==''){
+      $('#new_area_modal').modal('hide');
+      return false;
+    }
+    var params =  {
+            action: "save_new_area",
+            name:$scope.new_area,
+            city_id:$scope.doctor.city_id
+        };
+    var serializedData = $.param(params);
+      $http({
+          url: CMS_PATH+"inc/functions.php",
+          method: "POST",
+          data: serializedData
+      })
+      .then(function(res){
+        $('#new_area_modal').modal('hide');
+        $scope.areas.push({id:res.data, name:$scope.new_area});
+        console.log(res.data);
+        setTimeout(function(){ 
+			$( "#area_id" ).val(parseInt(res.data));
+			$("#area_id").select2();
+			$scope.doctor.area_id = parseInt(res.data);
+         }, 1000);
+      }, function(){});    
+  }
+
+    $scope.trigger_new_area_modal = function(){
+      if($scope.doctor.city_id==''){
+        $.jGrowl("Select City First!");
+        return false;
+      }
+      $('#new_area_modal').modal({ show: true});
+    }
+
 	$scope.load_doctors = function(){
 		var params =  {
 		        action: "get_all_my_doctors",

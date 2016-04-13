@@ -23,7 +23,7 @@ class Patient{
 	}
 
 	public function global_patients($q){
-		$this -> db -> query("SELECT id, CONCAT_WS(' ', first_name, middle_name, last_name) as name  FROM ".$this->tableName." WHERE status=1 and clinic_id!='".$_SESSION['current_clinic']."' and (first_name like '".$q."%' or last_name like '".$q."%')");
+		$this -> db -> query("SELECT id, CONCAT_WS(' ', first_name, middle_name, last_name) as name  FROM ".$this->tableName." WHERE status=1 and (first_name like '".$q."%' or last_name like '".$q."%')");
 		return $this -> db -> getResultSet();
 	}
 

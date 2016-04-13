@@ -1,3 +1,26 @@
+<div class='modal fade' id='new_area_modal' tabindex='-1'>
+<div class='modal-dialog'>
+  <div class='modal-content'>
+    <div class='modal-header'>
+      <button aria-hidden='true' class='close' data-dismiss='modal' type='button'>×</button>
+      <h4 class='modal-title' id='myModalLabel'>Add New Area</h4>
+    </div>
+    <div class='modal-body'>
+      <form class="form" style="margin-bottom: 0;" method="post" action="#" accept-charset="UTF-8"><input name="authenticity_token" type="hidden" />
+        <div class='form-group'>
+        <label for='inputText1'>New Area Name</label>
+        <input class='form-control' ng-model="new_area" id='new_area' placeholder='New Area' type='text'>
+        </div>
+      </form>
+
+    </div>
+    <div class='modal-footer'>
+      <button class='btn btn-default' data-dismiss='modal' type='button'>Close</button>
+      <button class='btn btn-primary' ng-click="save_new_area()" type='button'>Save changes</button>
+    </div>
+  </div>
+</div>
+</div>
 <div class='row'>
 <div class='col-sm-12'>
   <div class='box bordered-box blue-border'>
@@ -106,6 +129,7 @@
               <option value="">Choose...</option>
               <option ng-repeat="option in areas" value="{{option.id}}" ng-selected="{{option.id == patient.area_id}}">{{option.name}}</option>
               </select>
+              <label>Area</label><i ng-click="trigger_new_area_modal()" class="icon-plus-sign pull-right">Add New Area</i>
             </div>
             <div class='form-group'>
               <label>Address</label>

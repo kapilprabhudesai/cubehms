@@ -9,6 +9,44 @@ app.controller('patientsCtrl', function($scope, $http, $routeParams) {
 
 
 	$scope.patients = [];
+
+  $scope.save_new_area = function(){
+    if($scope.new_area==''){
+      $('#new_area_modal').modal('hide');
+      return false;
+    }
+    var params =  {
+            action: "save_new_area",
+            name:$scope.new_area,
+            city_id:$scope.patient.city_id
+        };
+    var serializedData = $.param(params);
+      $http({
+          url: CMS_PATH+"inc/functions.php",
+          method: "POST",
+          data: serializedData
+      })
+      .then(function(res){
+        $('#new_area_modal').modal('hide');
+        $scope.areas.push({id:res.data, name:$scope.new_area});
+        console.log(res.data);
+        setTimeout(function(){ 
+			$( "#area_id" ).val(parseInt(res.data));
+			$("#area_id").select2();
+			$scope.patient.area_id = parseInt(res.data);
+         }, 1000);
+      }, function(){});    
+  }
+
+    $scope.trigger_new_area_modal = function(){
+      if($scope.patient.city_id==''){
+        $.jGrowl("Select City First!");
+        return false;
+      }
+      $('#new_area_modal').modal({ show: true});
+    }
+
+
 	$scope.load_patients = function(){
 		var params =  {
 		        action: "get_all_my_patients",

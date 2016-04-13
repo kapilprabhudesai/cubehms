@@ -24,6 +24,14 @@ switch ($request_method){
 	}
 
 	switch ($action) {
+
+			case 'dashboard_stats':
+			$obj = new ManageClinics();
+			$data = $obj->dashboard_stats();
+			echo json_encode($data);
+			break;
+
+
 			case 'is_unique_mobile':
 			$obj = new Common();
 			$data = $obj->is_unique_mobile($params['str']);
@@ -977,7 +985,8 @@ switch ($request_method){
 				}else{
 					unset($params['user_id']);
 					$user = array();
-					$params['password'] = $params['first_name'].rand(1234,2345);
+					$params['password_text'] = 'N@'.$params['first_name'].rand(12345678,88888888);
+					$params['password'] = md5($params['password_text']);
 					$user['username'] = $params['email_1'];
 					$user['email'] = $params['email_1'];
 					$user['password'] = md5($params['password']);
@@ -1039,7 +1048,7 @@ switch ($request_method){
 						'from'=> SUPPORT_EMAIL, 
 						'to'=>$user['email'],
 						'subject'=>'New User @CubeHMS',
-						'body'=>'Welcome to CubeHMS<br/>'.$user['email'].', is sucessfully registered with us and added to clinic '.current_clinic_name().', please use the below  credentials to access.<br><table border="1"><tr><th>Type</th><th>Username</th><th>Password</th></tr><tr><th>Doctor</th><td>'.$user['email'].'</td><td>'.$params['password'].'</td></tr></table><br><br> <a href="'.CMS_PATH.'confirm.php?hash='.$user['password_hash'].'">Click Here to Complete registration process</a>'); 
+						'body'=>'Welcome to CubeHMS<br/>'.$user['email'].', is sucessfully registered with us and added to clinic '.current_clinic_name().', please use the below  credentials to access.<br><table border="1"><tr><th>Type</th><th>Username</th><th>Password</th></tr><tr><th>Doctor</th><td>'.$user['email'].'</td><td>'.$params['password_text'].'</td></tr></table><br><br> <a href="'.CMS_PATH.'confirm.php?hash='.$user['password_hash'].'">Click Here to Complete registration process</a>'); 
 					
 					$email_string = http_build_query($email);
 					curl_mail($email_string);

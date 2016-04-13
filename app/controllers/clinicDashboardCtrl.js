@@ -1,6 +1,10 @@
 'use strict';
 app.controller('clinicDashboardCtrl', function($scope, $http) {
 	
+	$scope.total = 0;
+	$scope.completed = 0;
+	$scope.pending = 0;
+
 	$scope.appointment_slots = [];
 	$scope.appointment_date = "";
 	$scope.appointment_doctors = [];
@@ -48,6 +52,7 @@ app.controller('clinicDashboardCtrl', function($scope, $http) {
 	        data: serializedData
 	    })
 	    .then(function(res){
+	    	$scope.dashboard_stats();
 	    	var data = res.data;
 	    	for(var i=0;i<data.length;i++){
 	    		switch(data[i].slot_id){
@@ -139,6 +144,30 @@ app.controller('clinicDashboardCtrl', function($scope, $http) {
 
 	$scope.load_patients();
 
+
+	$scope.dashboard_stats = function(){
+		var params =  {
+		        action: "dashboard_stats",
+		    };
+		var serializedData = $.param(params);
+	    $http({
+	        url: CMS_PATH+"inc/functions.php",
+	        method: "POST",
+	        data: serializedData
+	    })
+	    .then(function(res){
+	    	var data = res.data;
+	    	console.log(data);
+	    	$scope.total = data.total;
+	    	$scope.completed = data.completed;
+	    	$scope.pending = data.pending;
+
+	    }, function(){
+
+	    });	
+	}
+
+	$scope.dashboard_stats();
 
 	$scope.patient_actions = [];
 
