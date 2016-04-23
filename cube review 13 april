@@ -23,3 +23,78 @@ Notes:
 21. Done button in appointment listing
 22. Referal type investigation/clinic
 23. 
+
+
+Single clinic scenerio
+.............................
+DocA comes to website
+DocA register his clinicA
+Sms email goes to docA
+DocA activates his account
+DocA logs in
+DocA gets clinc registration default page
+
+DocA creates DocB and DocC as other associated doctors in his ClinicA
+Sms email is sent to DocB and DocC
+DocB and DocC activates their accounts
+DocB and DocC can log in to clinicA
+
+DocA changes his password
+Sms email is sent to DocA
+DocA forgots his password
+DocA enters the details to find his password
+Sms email is sent ti DocA
+
+DocB and DocC changes their password
+Sms email is send to DocB and DocC only
+DocB and DocC forgots password
+DocB and DocC enters the details to find their password
+Sms email is sent ti DocB and DocC only
+
+DocA define slots for himself
+DocA define slot fot DocB and DocC
+
+NurseA enter expense details
+NurseA enters item details
+DocA enters expense details
+DocA enters item details
+DocB and DocC is not allowed to enter expense and item details entry
+
+DocA create patientA
+DocA creates patientB
+NurseA creates patientC
+NurseA creates patientD
+DocB creates patientE
+DocC creates patientF
+
+All patients will get sms n email fr portal access
+
+Login to portal with individual patients
+Book appointment with DocA. DocB n DocC
+Sms n email will be sent to patient
+Send medication request to doctors as per specialy
+
+DocA.DocB n DocC will log in n confirm the patient appointments
+Sms n email is sent to patients for confirm appointments
+DocA.DocB n DocC will respond to patients medication  request
+Sms emailis sent to patients for respond to their request
+
+Patients can cancel thier appointments online
+Sms email is sent to patients on cancel appointment
+
+If NurseA or DocA marks some doctor as not available
+Sms email to be sent to patients who hav confirmed appointments. Mentioning appointment is cancelled
+
+If NurseB or DocA manages slots details as no slot
+Sms email to be sent to patients who hav confirmed appointments. Mentioning appointment is cancelled
+
+
+[9:29 PM, 4/20/2016] Chetan Salkar: Register new clinicB with new DocD
+[9:29 PM, 4/20/2016] Chetan Salkar: He will have more two doctors DocE and DocF
+[9:30 PM, 4/20/2016] Chetan Salkar: Apart frm this he will add global 2 doctors DocA and DocB
+[9:30 PM, 4/20/2016] Chetan Salkar: plz note DocA is having a clinic of himself
+[9:31 PM, 4/20/2016] Chetan Salkar: DocB is working with DocA already in his clinic
+[9:32 PM, 4/20/2016] Chetan Salkar: By defailult in ClinicA and ClinicB deafult will be their patient list only
+[9:33 PM, 4/20/2016] Chetan Salkar: But dwy can find globally available patients in seperate color
+[9:33 PM, 4/20/2016] Chetan Salkar: Clinic can edit deir own patients. For other patients it willl ask otp
+

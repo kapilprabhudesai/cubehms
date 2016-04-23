@@ -143,8 +143,8 @@ function set_clinic(clinic_id){
 		};
 
 		$.post(CMS_PATH+"inc/functions.php", obj)
-		.done( function(data) {
-			location.href=CMS_PATH+'index.php#/clinic_dashboard';
+		.done( function(link) {
+			location.href=CMS_PATH+'index.php#/'+link;
 		})
 		.fail( function(xhr, textStatus, errorThrown) {
 			$.jGrowl(textStatus);

@@ -1,5 +1,5 @@
 <div class='row'>
-<div class='col-sm-12'>
+<div class='col-sm-8 col-sm-offset-1'>
   <div class='box bordered-box blue-border'>
     <div class='box-header blue-background'>
       <div class='title'>
@@ -39,8 +39,8 @@
 			<span ng-repeat="(k,v) in doctor_slots track by $index">
 			<div ng-if="k==selected_day">
 				<span ng-repeat="x in v track by $index">
-				<button ng-if="x.availability=='1'" ng-click="book($index+1, x.text)" class="btn btn-danger">
-					{{x.text}}
+				<button ng-if="x.availability=='2'" ng-click="book($index+1, x.slot)" class="btn btn-danger">
+					{{x.slot}}
 				</button>					
 				</span>
 

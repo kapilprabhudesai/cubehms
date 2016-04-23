@@ -84,7 +84,7 @@ app.controller('appointmentsCtrl', function($scope, $http, $routeParams) {
 		        slot_text:$scope.search_params.slot_text,
 		        slot_id:$scope.search_params.slot_id,
 		        doctor_id:$scope.search_params.doctor_id,
-		        patient_id:$routeParams.id,
+		        patient_id:$scope.patient.patient_id,
 		        appointment_date:$scope.search_params.appointment_date
 		    };
 		var serializedData = $.param(params);
@@ -111,7 +111,7 @@ app.controller('appointmentsCtrl', function($scope, $http, $routeParams) {
 		var d = new Date(dt);
 		var doctor_id=$( "#doctor_id" ).val();
 		$scope.selected_day = ($scope.days[d.getDay()-1]);
-		//$scope.slots = $scope.doctor_slots[doctor_id][d.getDay()];
+		$scope.slots = $scope.doctor_slots[$scope.selected_day];
 		$scope.search_params.doctor_id = doctor_id;
 		$scope.search_params.appointment_date = dt;
 	}
@@ -146,7 +146,7 @@ app.controller('appointmentsCtrl', function($scope, $http, $routeParams) {
 	$scope.doctor_slots = [];
 	$scope.get_slots = function(did){
 		var params =  {
-		        action: "read_slots",
+		        action: "read_slots_for_create",
 		        doctor_id:did,
 		        book:1
 		    };

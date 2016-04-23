@@ -48,14 +48,14 @@ class Appointment{
 		if(role()=='doctor'){
 			$andcondition=" and dm.user_id=".current_user();
 		}
-		$sql = "SELECT ap.id,ap.cancel,ap.patient_arrived, ap.via_internet, ap.confirmed_by_doctor, slot_id, slot_text, concat_ws(' ',pm.first_name, pm.last_name) as patient_name,concat_ws(' ',dm.first_name, dm.last_name) as doctor_name, ap.doctor_id, DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(dob, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(dob, '00-%m-%d')) AS age FROM patient_appointments ap INNER JOIN patient_master pm on ap.patient_id =  pm.id inner join doctor_master dm on dm.user_id = ap.doctor_id where  ap.clinic_id='".clinic()."' and ap.appointment_date='".$date."' and confirmed_by_doctor=1 $andcondition GROUP BY ap.id ORDER BY slot_id";
+		$sql = "SELECT ap.id,ap.cancel,ap.patient_arrived, ap.via_internet, ap.confirmed_by_doctor, slot_id, slot_text, concat_ws(' ',u.first_name, u.last_name) as patient_name,concat_ws(' ',dm.first_name, dm.last_name) as doctor_name, ap.doctor_id, DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(dob, '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(dob, '00-%m-%d')) AS age FROM patient_appointments ap INNER JOIN patient_master pm on ap.patient_id =  pm.id INNER JOIN users u on pm.user_id =  u.id inner join doctor_master dm on dm.user_id = ap.doctor_id where  ap.clinic_id='".clinic()."' and ap.appointment_date='".$date."' and confirmed_by_doctor=1 $andcondition GROUP BY ap.id ORDER BY slot_id";
 		$this -> db -> query($sql);
 		return $this -> db -> getResultSet();
 	}
 
 	public function my_present_and_future_appointments(){
-		$sql = "SELECT ap.appointment_date,ap.id,ap.cancel,ap.patient_arrived, ap.via_internet, ap.confirmed_by_doctor, slot_id, slot_text, concat_ws(' ',pm.first_name, pm.middle_name, pm.last_name) as patient_name, ap.doctor_id FROM patient_appointments ap
-		INNER JOIN patient_master pm on ap.patient_id =  pm.id where ap.doctor_id='".current_user()."' and ap.clinic_id='".clinic()."' and ap.appointment_date>='".todays_date()."' ORDER BY ap.appointment_date,slot_id";
+		$sql = "SELECT ap.appointment_date,ap.id,ap.cancel,ap.patient_arrived, ap.via_internet, ap.confirmed_by_doctor, slot_id, slot_text, concat_ws(' ',u.first_name, u.middle_name, u.last_name) as patient_name, ap.doctor_id FROM patient_appointments ap
+		LEFT JOIN patient_master pm on ap.patient_id =  pm.id LEFT JOIN users u ON pm.user_id = u.id where ap.doctor_id='".current_user()."' and ap.clinic_id='".clinic()."' and ap.appointment_date>='".todays_date()."' ORDER BY ap.appointment_date,slot_id";
 		$this -> db -> query($sql);
 		return $this -> db -> getResultSet();
 	}	
@@ -66,6 +66,29 @@ class Appointment{
 
 	public function create($params){
 		return $this -> db -> insertDataIntoTable($params, $this -> tableName);
+	}
+	public function my_appointments(){
+		$sql = "SELECT qry,concat_ws(' ', u.first_name, u.last_name)as doctor_name, appointment_date, slot_text, clinic_name, pa.confirmed_by_doctor, cm.mobile_no_1 as clinic_mobile, cm.address FROM patient_appointments pa INNER JOIN users u on pa.doctor_id = u.id INNER JOIN clinic_master cm on pa.clinic_id = cm.id where pa.patient_id='".current_user()."'";
+		$this -> db -> query($sql);
+		return $this -> db -> getResultSet();		
+	}
+	public function patient_doctor_search($country_id=null, $state_id =null, $city_id = null, $specialties=null){
+		$where = "";
+		if($country_id!=null){
+			$where .=" and cm.country_id='".$country_id."'";
+		}
+		if($state_id!=null){
+			$where .=" and cm.state_id='".$state_id."'";
+		}
+		if($city_id!=null){
+			$where .=" and cm.city_id='".$city_id."'";
+		}
+		if($specialties!=null){
+			$where .=" and dm.specialties in(".$specialties.")";
+		}
+		$sql = "SELECT dm.id as doctor_master_id, dm.user_id, cm.clinic_name, concat_ws(' ',u.first_name,u.last_name) AS doctor_name, cm.address, city_master.name as city, state_master.name as state, cm.mobile_no_1, cm.landline_1 FROM doctor_master dm INNER JOIN users u ON dm.user_id = u.id INNER JOIN clinic_master cm ON dm.clinic_id = cm.id INNER JOIN city_master ON cm.city_id = city_master.id INNER JOIN state_master ON cm.state_id = state_master.id where u.status=1 ".$where;
+		$this -> db -> query($sql);
+		return $this -> db -> getResultSet();		
 	}
 
 }

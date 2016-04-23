@@ -89,6 +89,18 @@ app.directive('mandate', function() {
       .when('/doctor_availability', {
         templateUrl: 'views/doctors/doctor_availability.html',
         controller: 'doctorsCtrl'
+      }) 
+      .when('/patient_dashboard', {
+        templateUrl: 'views/patient_dashboard/dashboard.html',
+        controller: 'patientDashboardCtrl'
+      }) 
+      .when('/edit_me', {
+        templateUrl: 'views/patient_dashboard/edit_me.html',
+        controller: 'patientSelfEditCtrl'
+      }) 
+      .when('/my_appointments', {
+        templateUrl: 'views/patient_dashboard/my_appointments.html',
+        controller: 'patientsAppointmentsCtrl'
       })      
 			.otherwise({
 				redirectTo: '/err'

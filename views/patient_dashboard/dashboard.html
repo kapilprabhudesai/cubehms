@@ -1,0 +1,113 @@
+<div class='modal fade' id='book_modal' tabindex='-1'>
+<div class='modal-dialog'>
+  <div class='modal-content'>
+    <div class='modal-header'>
+      <button aria-hidden='true' class='close' data-dismiss='modal' type='button'>×</button>
+      <h4 class='modal-title' id='myModalLabel'>Book Appointment For {{pulled_slot.day}}, {{pulled_slot.dt}}</h4>
+    </div>
+    <div class='modal-body'>
+     <b style="float:left; margin-right:20px;padding:10px;cursor:pointer;" ng-if="slot.availability=='2'" ng-repeat="(k,slot) in pulled_slot.slots" ng-click="book(k,slot.slot)">{{slot.slot}}</b>
+     <textarea class="form-control" id="query" placeholder="Enter Your Query Here"></textarea>
+    <span class="clearfix"></span>
+    <button ng-click="fetch_slots(pulled_slot.doctor_id, pulled_slot.user_id, pulled_slot.prev)" class="btn btn-info pull-left">{{pulled_slot.prev}}</button>
+    <button ng-click="fetch_slots(pulled_slot.doctor_id, pulled_slot.user_id, pulled_slot.next)" class="btn btn-info pull-right">{{pulled_slot.next}}</button>
+    </div>
+    <div class='modal-footer'>
+      <button class='btn btn-default' data-dismiss='modal' type='button'>Close</button>
+    </div>
+  </div>
+</div>
+</div>
+<div class='row'>
+<div class='col-sm-12'>
+  <div class='box bordered-box blue-border'>
+    <div class='box-header blue-background'>
+      <div class='title'>
+        <i class='icon-circle'></i>
+        Search My Doctor
+      </div>
+    </div>
+    <div class='box-content box-double-padding'>
+      <form>
+           <div class='form-group col-md-3'>
+              <label>Country</label>
+              <select  class="select2 form-control" id="country_id" ng-model="search.country_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in countries" value="{{option.id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group col-md-3'>
+              <label>State</label>
+              <select  class="select2 form-control" id="state_id" ng-model="search.state_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in states" value="{{option.id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group col-md-3'>
+              <label>City</label>
+              <select  class="select2 form-control" id="city_id" ng-model="search.city_id">
+              <option value="">Choose...</option>
+              <option ng-repeat="option in cities" value="{{option.id}}">{{option.name}}</option>
+              </select>
+            </div>
+            <div class='form-group col-md-3'>
+              <label>Specialties</label>
+              <select  class="select2 form-control" id="specialties" ng-model="search.selected_specialties" multiple>
+              <option value="">Choose...</option>
+              <option ng-repeat="option in specialties" value="{{option.id}}">{{option.name}}</option>
+              </select>
+            </div> 
+
+
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="col-xs-12">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="page-header">
+        <h1 class="pull-left">
+          <i class="icon-search"></i>
+          <span>Search results</span>
+        </h1>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6" ng-repeat="rec in searched_doctors">
+      <div class="box">
+        <div class="box-content">
+          <div>
+             <h4 class="pull-left">
+              <a class="text-contrast" href="#">{{rec.doctor_name}} Practicing @ {{rec.clinic_name}}</a>
+            </h4>
+            <span class="clearfix"></span>
+            <p style="float:left">
+              <b>Specialities</b>Ortho, Gyno Poco
+            </p>
+            <p style="float:left">
+              <b>Available On &nbsp;:&nbsp;</b>Mon, Tue, Wed, Thu, Fri, Sat, Sun
+            </p> 
+            <span class="clearfix"></span>
+            <p>
+              <b>Contact Address:</b>{{rec.address}}, {{rec.city}} - {{rec.state}}
+            </p>
+            <span class="clearfix"></span>
+            <p>
+              <b>Phone:</b>{{rec.mobile_no_1}}, {{rec.landline_no_1}}
+            </p>
+            
+              <button ng-click="fetch_slots(rec.doctor_master_id, rec.user_id)" class="btn btn-success">Insta Book</button>
+                     
+          </div>
+
+         
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

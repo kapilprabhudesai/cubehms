@@ -10,7 +10,7 @@ app.controller('clinicCtrl', function($scope, $http) {
 	$scope.old_mobile_2 = "";
 
     $scope.validate_mobile_no = (function() {
-        var regexp = /^(\+91[\-\s]?)\d{10}$/;
+        var regexp = /^\d{10}$/;
         return {
             test: function(value) {
                 return regexp.test(value);
@@ -93,6 +93,7 @@ app.controller('clinicCtrl', function($scope, $http) {
       $('#new_area_modal').modal('hide');
       return false;
     }
+    $('#new_area_modal').modal('hide');
     var params =  {
             action: "save_new_area",
             name:$scope.new_area,
@@ -105,18 +106,22 @@ app.controller('clinicCtrl', function($scope, $http) {
           data: serializedData
       })
       .then(function(res){
-        $('#new_area_modal').modal('hide');
-        $scope.areas.push({id:res.data, name:$scope.new_area});
-        console.log(res.data);
-        setTimeout(function(){ 
-			$( "#area_id" ).val(parseInt(res.data));
-			$("#area_id").select2();
-			$scope.clinic.area_id = parseInt(res.data);
-         }, 1000);
+        if(res.data!=0){
+          $scope.areas.push({id:res.data, name:$scope.new_area});
+          console.log(res.data);
+          setTimeout(function(){ 
+              $( "#area_id" ).val(parseInt(res.data));
+              $("#area_id").select2();
+              $scope.register.area_id = parseInt(res.data);
+           }, 1000);
+        }else{
+          $.jGrowl("Area Already Exists!");
+        }
       }, function(){});    
   }
 
     $scope.trigger_new_area_modal = function(){
+      $scope.new_area = "";
       if($scope.clinic.city_id==''){
         $.jGrowl("Select City First!");
         return false;

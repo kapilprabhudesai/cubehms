@@ -47,16 +47,18 @@
                   <th>Name</th>
                   <th>Mobile</th>
                   <th>Email</th>
-                  <th>Address</th>                  
+                  <th>Address</th> 
+                  <th></th>                  
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="p in patients| filter: searchKeyword track by $index  ">
-                  <td><input data-rule-required="true" id="patient_id" name="patient_id" type="radio" ng-click="patient_selected($index,p.patient_id)"></td>
+                <tr ng-repeat="p in patients| filter: searchKeyword track by $index" style="color:{{p.color}}">
+                  <td><input data-rule-required="true" id="patient_id" name="patient_id" type="radio" ng-click="patient_selected($index,p.user_id)"></td>
                   <td>{{p.name}}</td>
                   <td>{{p.mobile_no_1}}</td>
-                  <td>{{p.email_1}}</td>
-                  <td>{{p.address}}</td>                  
+                  <td>{{p.email}}</td>
+                  <td>{{p.address}}</td>
+                  <td><button ng-if="p.color=='red'" class="btn btn-warning" ng-click="add_to_list(p.user_id)">Add To List</button></td>                  
                 </tr>
               </tbody>
             </table>    
@@ -73,6 +75,7 @@
       <div class='box-content box-no-padding'>
         <div class='responsive-table'>
           <div class='scrollable-area'>
+
             <table class='table table-hover table-striped' style='margin-bottom:0;'>
               <thead>
                 <tr>
@@ -94,7 +97,7 @@
                 </tr>
                 <tr>
                   <th>
-                    Slot
+                    Time
                   </th>
                   <th>
                     Appointments
@@ -102,21 +105,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th>Patient</th>
-                  <th>Arrive/Cancel/Manage</th>
-                </tr>
-                <tr ng-repeat = "slot in appointment_slots">
-                  <th colspan="1">
-                    {{slot.slot_name}}
+                <tr ng-repeat = "(slot_name,slot) in appointment_slots">
+                  <th style="vertical-align: middle;">
+                    {{slot_name}}
                   </th>
                   <td>
                     <table style="width:100%">
-                      <tr ng-repeat = "s in slot.appointments"  ng-if="appointment_selected_doctor==s.doctor_id">
+                      <tr ng-repeat = "s in slot"  ng-if="appointment_selected_doctor==s.doctor_id">
                         <span>
                         <td style="width:100%">
-                        {{s.patient_name}}(Age:{{s.age}})
-                          <div class="clearfix">
                             <div class='text-left pull-left'>    
                                 <span ng-if="s.patient_arrived!=1&&s.cancel!=1">
                                   <input type="text" size="3" placeholder="weight" id="weight_{{s.id}}">
@@ -134,10 +131,9 @@
                                   <a class='btn btn-success btn-xs' ng-href='#manage?aid={{s.id}}'>
                                     <i class='icon-search'></i>
                                   </a>                              
-                                </span>
-                              
-                            </div>
-                            <div style="font-size: 12px;" class="text-right pull-right"><i style="color:blue">{{s.doctor_name}}<b>{{s.slot_text}}</b></i></div>                            
+                                </span>       
+                            </div> 
+                            {{s.patient_name}}(Age:{{s.age}})                        
                           </div>
                         </td>
                         </span>

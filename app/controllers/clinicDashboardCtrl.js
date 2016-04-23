@@ -18,6 +18,26 @@ app.controller('clinicDashboardCtrl', function($scope, $http) {
 	popupWin.document.close();
 	} 
 
+
+	$scope.add_to_list = function(user_id){
+		var y = window.confirm("Do you want to add this patient to your list?");
+		if(y==true){
+			var params =  {
+			        action: "add_patient_to_my_list",
+			        id:user_id
+			    };
+			var serializedData = $.param(params);
+		    $http({
+		        url: CMS_PATH+"inc/functions.php",
+		        method: "POST",
+		        data: serializedData
+		    })
+		    .then(function(res){
+		    	$scope.load_patients();
+		    	alert("Patient Added To Your List!");
+		    });				
+		}
+	}
 	$scope.unconfirmed_appointments = function(){
 		var params =  {
 		        action: "unconfirmed_appointments"
@@ -39,7 +59,7 @@ app.controller('clinicDashboardCtrl', function($scope, $http) {
 
 	$scope.get_appointments = function(){
 		$scope.appointment_doctors = [];
-		$scope.appointment_slots = [{'slot_name':'Slot 1', 'appointments':[]}, {'slot_name':'Slot 2', 'appointments':[]}, {'slot_name':'Slot 3', 'appointments':[]}, {'slot_name':'Slot 4', 'appointments':[]}];
+		$scope.appointment_slots = {};
 	
 		var params =  {
 		        action: "get_appointments",
@@ -54,13 +74,13 @@ app.controller('clinicDashboardCtrl', function($scope, $http) {
 	    .then(function(res){
 	    	$scope.dashboard_stats();
 	    	var data = res.data;
+	    	console.log(data);
 	    	for(var i=0;i<data.length;i++){
-	    		switch(data[i].slot_id){
-	    			case "1": $scope.appointment_slots[0].appointments.push(data[i]); break;
-	    			case "2": $scope.appointment_slots[1].appointments.push(data[i]); break;
-	    			case "3": $scope.appointment_slots[2].appointments.push(data[i]); break;
-	    			case "4": $scope.appointment_slots[3].appointments.push(data[i]); break;
-	    		}
+	    		console.log("data",data[i]);
+	    		if($scope.appointment_slots[data[i].slot_text] === undefined){
+	    			$scope.appointment_slots[data[i].slot_text] = [];
+	    		} 
+	    		$scope.appointment_slots[data[i].slot_text].push(data[i]);
 	    		$scope.appointment_doctors.push({id:data[i].doctor_id, name:data[i].doctor_name});
 	    	}
 			$scope.appointment_doctors = _.uniq($scope.appointment_doctors, function(item, key, a) { 
@@ -69,6 +89,7 @@ app.controller('clinicDashboardCtrl', function($scope, $http) {
 			if($scope.appointment_doctors.length>0){
 				$scope.appointment_selected_doctor = $scope.appointment_doctors[0].id;   			
 			}
+			console.log($scope.appointment_slots);
 	
 	    }, function(){});
    }   

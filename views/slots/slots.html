@@ -6,35 +6,43 @@
         <i class='icon-circle'></i>
         Manage Slots By Selecting Doctor
       </div>
+      		<button ng-click="ok()" class="btn btn-success pull-right">Save</button>
     </div>
     <br/>
 	<button style="margin-right:40px;" ng-repeat="doctor in doctors" ng-click="set_doctor(doctor.user_master_id, doctor.doctor_master_id)" class="btn btn-danger">
 		{{doctor.name}}
 	</button>
 	<br/><br/>
-	<table class="table">
-		<tr>
-			<th>
-				Day
-			</th>
-			<th>Slot A</th>
-			<th>Slot B</th>
-			<th>Slot C</th>
-			<th>Slot D
-			<button ng-click="ok()" class="btn btn-success pull-right">Save</button>
-			</th>
-		</tr>
-		<tr ng-repeat="(key, value) in slots">
-			<th>{{key}}</th>
-			<td ng-repeat="s in sl track by $index">
-				<div style="font-size:12px;height:300px;overflow-y:scroll;overflow-y: scroll;">
-					<p ng-repeat="v in value[s]"><input id="{{key}}_{{s}}_{{$index+1}}" ng-click="set_val(key,s,$index+1)" class="{{key}}_{{s}}" ng-disabled="v.availability==1" ng-checked="v.availability==2" type="checkbox">{{v.slot}}</p>
-				</div>
-			</td>
-		</tr>
-	</table>
 
+		<div class='row'>
 
+			<div class='col-sm-12 box'  ng-repeat='(key, value) in slots'>
+			  <div class='box-content'>
+			    <div class='accordion accordion-red panel-group' id='{{key}}' style='margin-bottom:0;'>
+			      <div class='panel panel-default'>
+			        <div class='panel-heading'>
+			          <button class="btn btn-info btn-block" ng-click="collapse_toggle(key)">{{key}}</button>
+			        </div>
+			        <div class='panel-collapse collapse in' id='collapseOne-{{key}}'>
+			          <div class='panel-body'>
+			            <div class='form-group'>
+			              <div class='input-group date col-xs-4' id='datetimepicker{{key}}'>
+			                  <input type='text' placeholder="Valid Till" class="form-control" value="{{valid_till}}" id="valid_till_{{key}}"/>
+			                  <span class="input-group-addon">
+			                      <span class="fa fa-calendar">
+			                      </span>
+			                  </span>
+			              </div>
+			            </div>
+			            <span class="clearfix"></span>
+			           		<button  class="btn col-md-3" ng-click="set_val(key,($index+1))" ng-class="check_class(key,($index+1))" id="{{key}}_{{$index+1}}" ng-hide="v.availability=='1'" ng-repeat="v in value track by $index">{{v.slot}}</button>
+			          </div>
+			        </div>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		</div>	
 	</div>
 </div>
 </div>

@@ -23,7 +23,7 @@ $emails = all_user_emailids();
           </div>
           <div class='modal-footer'>
             <button class='btn btn-default' data-dismiss='modal' type='button'>Close</button>
-            <button class='btn btn-primary' ng-click="save_new_area()" type='button'>Save</button>
+            <button class='btn btn-primary' ng-click="save_new_area()" id="save_new_area" type='button'>Save</button>
           </div>
         </div>
       </div>
@@ -102,7 +102,7 @@ $emails = all_user_emailids();
                     </div>
                     <div class='form-group'>
                       <label>Mobile No<font style="color:red">*</font></label>
-                      <input class="form-control" placeholder="+91 9673173727" ng-keyup="is_unique_mobile()" id="mobile_no_1" name="mobile_no_1" ng-model="register.mobile_no_1" type="text" required  ng-pattern="validate_mobile_no">
+                      <input class="form-control" placeholder="9xxxxxxxxx" ng-keyup="is_unique_mobile()" id="mobile_no_1" name="mobile_no_1" ng-model="register.mobile_no_1" type="text" required  ng-pattern="validate_mobile_no">
                       <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.required && myForm.mobile_no_1.$dirty">Mobile Number Is Mandatory</span>
                       <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.pattern && myForm.mobile_no_1.$dirty"><br>Invalid Mobile No</span>
                       <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.unique_mobile && myForm.mobile_no_1.$dirty">Mobile No Already Registered</span>
@@ -187,7 +187,7 @@ $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded
 
 
    $scope.validate_mobile_no = (function() {
-      var regexp = /^(\+91[\-\s]?)\d{10}$/;
+      var regexp = /^\d{10}$/;
       return {
           test: function(value) {
               return regexp.test(value);
@@ -205,6 +205,7 @@ $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded
             name:$scope.new_area,
             city_id:$scope.register.city_id
         };
+    $('#new_area_modal').modal('hide');  
     var serializedData = $.param(params);
       $http({
           url: CMS_PATH+"inc/functions.php",
@@ -212,14 +213,17 @@ $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded
           data: serializedData
       })
       .then(function(res){
-        $('#new_area_modal').modal('hide');
-        $scope.areas.push({id:res.data, name:$scope.new_area});
-        console.log(res.data);
-        setTimeout(function(){ 
-            $( "#area_id" ).val(parseInt(res.data));
-            $("#area_id").select2();
-            $scope.register.area_id = parseInt(res.data);
-         }, 1000);
+        if(res.data!=0){
+          $scope.areas.push({id:res.data, name:$scope.new_area});
+          console.log(res.data);
+          setTimeout(function(){ 
+              $( "#area_id" ).val(parseInt(res.data));
+              $("#area_id").select2();
+              $scope.register.area_id = parseInt(res.data);
+           }, 1000);
+        }else{
+          $.jGrowl("Area Already Exists!");
+        }
       }, function(){});    
   }
 
@@ -346,6 +350,7 @@ $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded
     }
 
     $scope.trigger_new_area_modal = function(){
+      $scope.new_area="";
       if($scope.register.city_id==''){
         $.jGrowl("Select City First!");
         return false;

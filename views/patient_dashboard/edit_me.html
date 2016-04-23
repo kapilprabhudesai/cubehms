@@ -27,14 +27,8 @@
     <div class='box-header blue-background'>
       <div class='title'>
         <i class='icon-circle'></i>
-        Update/Add New Patient to Clinic 
+        My Profile
       </div>
-
-      <div class='title pull-right'>
-        <i class='icon-circle'></i>
-        {{clinic.clinic_name}}
-      </div>
-      
     </div>
     <div class='box-content box-double-padding'>
       <form class='form' name="myForm" style='margin-bottom: 0;'>
@@ -89,10 +83,6 @@
 
 
           <div class='col-sm-6'>
-            <div class='form-group'>
-              <h4>Clinic Code: <strong style="color:red">{{clinic.clinic_code}}</strong></h4>
-            </div>
-
             <div class='form-group'>
               <label>Country</label>
               <select  class="select2 form-control" id="country_id" ng-model="patient.country_id">

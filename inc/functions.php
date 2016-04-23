@@ -59,7 +59,7 @@ switch ($request_method){
 				
 			$email_string = http_build_query($email);
 	 		curl_mail($email_string);	
-			SendSMS("+91 7303597100", "CubeHMS: Forgot Password UserID: <".$params['email']."> Password: <".$password.">");	
+			SendSMS($data[0]['mobile_no_1'], "Forgot Password UserID: <".$params['email']."> Password: <".$password.">");	
 
 			break;
 
@@ -69,7 +69,7 @@ switch ($request_method){
 			echo "string";
 			$email = array(
 					'from'=> SUPPORT_EMAIL, 
-					'to'=>$list[0]['email_1'],
+					'to'=>$list[0]['email'],
 					'subject'=>'OTP @CubeHMS',
 					'body'=>'Welcome to CubeHMS<br/>Dear '.$list[0]['first_name'].' '.$list[0]['last_name'].' your information is about to change by '.display_name().' at '.current_clinic_name().'.<br><br>Please find your OTP: 1239'
 				); 
@@ -77,7 +77,7 @@ switch ($request_method){
 				$email_string = http_build_query($email);
 	 		curl_mail($email_string);	
 
-			SendSMS($list[0]['mobile_no_1'], "CubeHMS: OTP. Please find your OTP: 1239");			
+			SendSMS($list[0]['mobile_no_1'], " OTP. Please find your OTP: 1239");			
 			break;
 
 			case 'get_availabilities':
@@ -347,6 +347,71 @@ switch ($request_method){
 			echo json_encode($data);
 			break;
 
+
+			case 'my_appointments':
+			$main_obj = new Appointment();
+			$data = $main_obj->my_appointments();
+			echo json_encode($data);
+			break;
+
+			case 'book_appointment_online':
+				
+				$main_obj = new Appointment();
+				$params['patient_id'] = current_user();
+				$params['confirmed_by_doctor'] = 0;
+				 
+				$blocked = check_if_blocked($params['appointment_date'], $params['doctor_id']);
+
+				if($blocked == false){
+
+					$c = $main_obj->create($params);
+					if($c>0){
+						$json['status'] = true;
+						$json['msg'] = "Appointment Successful";
+					}else{
+						$json['status'] = false;
+						$json['msg'] = "Appointment UnSuccessful";
+					}
+					ob_start();
+					echo json_encode($json); // send the response
+					header('Connection: close');
+					header('Content-Length: '.ob_get_length());
+					ob_end_flush();
+					ob_flush();
+					flush();
+
+					
+					$main_obj = new Patient();
+					$data = $main_obj->fill_user_details(current_user());
+					$main_obj = new ManageDoctors();
+					$docdata = $main_obj->get_user_details($params['doctor_id']);
+					$main_obj = new ManageClinics();
+					$clidata = $main_obj->get_clinic();
+					$email_id = $data[0]['email'];
+					$mobile   = $data[0]['mobile_no_1'];
+					$email = array(
+						'from'=> SUPPORT_EMAIL, 
+						'to'=>$email_id,
+						'subject'=>'Appointment Requested @CubeHMS',
+						'body'=>'Welcome to CubeHMS<br/>'.$data[0]['first_name'].' you have requested an appointment on '.$params['appointment_date'].' at '.$params['slot_text'].' with '.$docdata[0]['first_name'].' '.$docdata[0]['last_name'].'  at '.current_clinic_name().'<br/>Clinic Ph: '.$clidata[0]['mobile_no_1'].', '.$clidata[0]['landline_1'].'<br/>Address:'.$clidata[0]['address']
+					); 
+					
+					$email_string = http_build_query($email);
+					$sms ='Appointment Requested. '.$data[0]['first_name'].' you have requested an appointment on '.$params['appointment_date'].' at '.$params['slot_text'].' with '.$docdata[0]['first_name'].' '.$docdata[0]['last_name'].'  at '.current_clinic_name().'. Clinic Ph: '.$clidata[0]['mobile_no_1'].', '.$clidata[0]['landline_1'];
+		 			curl_mail($email_string);
+		 			SendSMS($mobile, $sms);					
+				}else{
+						$json = array();
+						$json['status'] = false;
+						$json['msg'] = "Appointment UnSuccessful As Doctor Is Unavailable On this Day!";		
+						echo json_encode($json);			
+				}
+
+
+			break;		
+
+
+
 			case 'book_appointment':
 				$main_obj = new Appointment();
 				$params['clinic_id'] = clinic();
@@ -406,7 +471,7 @@ switch ($request_method){
 				unconfirmed_appointments();
 			break;
 
-			case 'read_slots':
+			case 'read_slots_for_create':
 			$main_obj = new Slot();
 
 			$search = array( 'status'=>'1');
@@ -426,26 +491,12 @@ switch ($request_method){
 			$time = new DateTime('2011-11-17 00:00');
 			$time2 = new DateTime('2011-11-17 00:30');
 			$slots = array();
-			$book_slots = array();
 			$minutes_to_add = 30;
 			global $days;
-			$time_slots = array();
 			foreach ($days as $day) {
-				$book_slots[$day]=[];
-				$book_slots[$day]['A']['availability']=0;
-				$book_slots[$day]['B']['availability']=0;
-				$book_slots[$day]['C']['availability']=0;
-				$book_slots[$day]['D']['availability']=0;
 				for($i=1;$i<=48;$i++){
-					$slots[$day]['A'][$i]['slot'] =  $time->format('h:i A').'-'.$time2->format('h:i A');
-					$slots[$day]['B'][$i]['slot'] =  $time->format('h:i A').'-'.$time2->format('h:i A');
-					$slots[$day]['C'][$i]['slot'] =  $time->format('h:i A').'-'.$time2->format('h:i A');
-					$slots[$day]['D'][$i]['slot'] =  $time->format('h:i A').'-'.$time2->format('h:i A');
-					$time_slots[$i] = $slots[$day]['A'][$i]['slot'];
-					$slots[$day]['A'][$i]['availability'] = 0;
-					$slots[$day]['B'][$i]['availability'] = 0;
-					$slots[$day]['C'][$i]['availability'] = 0;
-					$slots[$day]['D'][$i]['availability'] = 0;
+					$slots[$day][$i]['slot'] =  $time->format('h:i A').'-'.$time2->format('h:i A');
+					$slots[$day][$i]['availability'] = 0;
 					$time->add(new DateInterval('PT' . $minutes_to_add . 'M'));
 					$time2->add(new DateInterval('PT' . $minutes_to_add . 'M'));
 				}
@@ -454,111 +505,33 @@ switch ($request_method){
 			foreach ($c as $row) {
 		       $tmp ="";
 		       $tmp2 = array();
-		       $tmp = $row['slot_1'];
+		       $tmp = $row['slots'];
 		       $tmp2 = explode('-', $tmp);
 		       if($tmp!=""){
 			       for($i=0;$i<count($tmp2);$i++){
-			           $slots[$row['day']]['A'][$tmp2[$i]]['availability']=1;
+			           $slots[$row['day']][$tmp2[$i]]['availability']=1;
 			           if($row['clinic_id']==clinic()){
-			           	 $slots[$row['day']]['A'][$tmp2[$i]]['availability']=2;
+			           	 $slots[$row['day']][$tmp2[$i]]['availability']=2;
 			           }
 			       }		       	
-		       }
-
-		       if(count($tmp2)>0){
-		       	if($tmp2[0]!=''){
-					$book_slots[$row['day']]['A']['availability']=1;
-					$book_slots[$row['day']]['A']['text'] = $time_slots[$tmp2[0]].'-'.$time_slots[$tmp2[count($tmp2)-1]];		       	
-					$t= explode('-', $book_slots[$row['day']]['A']['text']);
-					$book_slots[$row['day']]['A']['text'] = $t[0].'-'.$t[count($t)-1];
-					
-		       	}
-		       }
-		       
-		       $tmp ="";
-		       $tmp2 = array();
-		       $tmp = $row['slot_2'];
-		       $tmp2 = explode('-', $tmp);
-		       if($tmp!=""){
-			       for($i=0;$i<count($tmp2);$i++){
-			           $slots[$row['day']]['B'][$tmp2[$i]]['availability']=1;
-			           if($row['clinic_id']==clinic()){
-			           	 $slots[$row['day']]['B'][$tmp2[$i]]['availability']=2;
-			           }			           
-			       }		       	
-		       }
-		       //echo $tmp2[0];
-		       //echo $tmp2[count($tmp2)-1];
-		       //pr($time_slots);
-		       if(count($tmp2)>0){
-		       	if($tmp2[0]!=''){
-		       		$book_slots[$row['day']]['B']['availability']=1;
-			       $book_slots[$row['day']]['B']['text'] = $time_slots[$tmp2[0]].'-'.$time_slots[$tmp2[count($tmp2)-1]];	
-					$t= explode('-', $book_slots[$row['day']]['B']['text']);
-					$book_slots[$row['day']]['B']['text'] = $t[0].'-'.$t[count($t)-1];			       	       	
-		       	}
-		       }
-
-
-		       $tmp ="";
-		       $tmp2 = array();
-		       $tmp = $row['slot_3'];
-		       $tmp2 = explode('-', $tmp);
-		       if($tmp!=""){
-			       for($i=0;$i<count($tmp2);$i++){
-			           $slots[$row['day']]['C'][$tmp2[$i]]['availability']=1;
-			           if($row['clinic_id']==clinic()){
-			           	 $slots[$row['day']]['C'][$tmp2[$i]]['availability']=2;
-			           }			           
-			       }		       	
-		       }
-		       if(count($tmp2)>0){
-		       	if($tmp2[0]!=''){
-		       		$book_slots[$row['day']]['C']['availability']=1;
-			       $book_slots[$row['day']]['C']['text'] = $time_slots[$tmp2[0]].'-'.$time_slots[$tmp2[count($tmp2)-1]];	
-					$t= explode('-', $book_slots[$row['day']]['C']['text']);
-					$book_slots[$row['day']]['C']['text'] = $t[0].'-'.$t[count($t)-1];			       	       	
-		       	}
-		       }
-
-		       $tmp ="";
-		       $tmp2 = array();
-		       $tmp = $row['slot_4'];
-		       $tmp2 = explode('-', $tmp);
-		       if($tmp!=""){
-			       for($i=0;$i<count($tmp2);$i++){
-			           $slots[$row['day']]['D'][$tmp2[$i]]['availability']=1;
-			           if($row['clinic_id']==clinic()){
-			           	 $slots[$row['day']]['D'][$tmp2[$i]]['availability']=2;
-			           }			           
-			       }		       	
-		       }
-		       if(count($tmp2)>0){
-		       	if($tmp2[0]!=''){
-		       	   $book_slots[$row['day']]['D']['availability']=1;
-			       $book_slots[$row['day']]['D']['text'] = $time_slots[$tmp2[0]].'-'.$time_slots[$tmp2[count($tmp2)-1]];		
-					$t= explode('-', $book_slots[$row['day']]['D']['text']);
-					$book_slots[$row['day']]['D']['text'] = $t[0].'-'.$t[count($t)-1];			              	
-		       	}
-		       }		                          
+		       }		       		                          
 			}
-			if(isset($params['book'])){
-				echo json_encode($book_slots);
-			}else{
-				echo json_encode($slots);				
-			}
+			echo json_encode($slots);				
+			
 
 			break;
 
-		case 'save_slots':
+
+		case 'save_slots':	
 
 			$main_obj = new Slot();
 			$params['slot_detail'] = json_decode($params['slot_detail']);
 
+			
 
 	 		foreach ($params['slot_detail'] as $key => $value) {
-	 			$search = array('user_id'=>$params['user_id'], 'doctor_id'=>$params['doctor_id'], 'day'=>$key);
-	 			$updateobj = array('clinic_id'=>clinic(), 'slot_1'=>$value[0],'slot_2'=>$value[1],'slot_3'=>$value[2],'slot_4'=>$value[3]);
+	 			$search = array('user_id'=>$params['user_id'], 'doctor_id'=>$params['doctor_id'], 'day'=>$value->day);
+	 			$updateobj = array('clinic_id'=>clinic(), 'slots'=>$value->slots, 'valid_till'=>$value->valid_till);
 	 			$data = $main_obj->update($updateobj, $search);
 	 		}
 			
@@ -595,25 +568,230 @@ switch ($request_method){
 				); 
 				
 				$email_string = http_build_query($email);
-				$sms ='CubeHMS: Appointment Cancelled. '.$app['patient'].',<br/>Your Appointment with '.$app['doctor'].' on '.$app['appointment_date'].' at '.current_clinic_name().' has been cancelled.';
+				$sms =' Appointment Cancelled. '.$app['patient'].',<br/>Your Appointment with '.$app['doctor'].' on '.$app['appointment_date'].' at '.current_clinic_name().' has been cancelled.';
 	 			curl_mail($email_string);
 	 			SendSMS($app['mobile_no_1'], $sms);	
 
 				break;	
 
+		case 'add_patient_to_my_list':	
+				$obj = new Patient();
+				$patient = array();	
+				$patient['user_id']= $params['id'];
+				$patient['clinic_id']= clinic();
+				$patient['owned_by']= '';
+				$patient['status']= 1;
+				$patient['created_by']= current_user();
+				$patient['created_on']= todays_datetime();
+				$res = $obj->create($patient);
+				$json['msg'] = "New Patient Added";
+				$json['status'] = true;	
+		break;
+
 		case 'get_all_my_patients':
 			$obj = new Patient();
 			$list = $obj->read_list_view();
+			$my_patients = array();
+			$other_patients = array();
+			
+			foreach ($list as $key=>$item) {
+				if($list[$key]['clinic']==clinic()){
+					$list[$key]['color']='green';
+					$my_patients[$list[$key]['user_id']]=$list[$key];
+				}else{
+					$list[$key]['color']='red';
+					$other_patients[$list[$key]['user_id']]=$list[$key];
+				}
+			}
+
+			foreach ($other_patients as $key => $value) {
+				if(!isset($my_patients[$key])){
+					$my_patients[$key] = $value;
+				}
+			}
+			$list = array();
+			foreach ($my_patients as $key => $value) {
+				$list[]=$value;
+			}
 			echo json_encode($list);
 		break;
 
+
+		case 'fetch_slots':
+		if($params['dt']==''){
+			$params['dt']=date('Y-m-d');
+		}
+		$day = strtolower(date('D', strtotime($params['dt'])));
+		$params['day']=$day;
+		$obj = new Slot();
+		$data = $obj->fetch_slots($params);
+			$time = new DateTime('2011-11-17 00:00');
+			$time2 = new DateTime('2011-11-17 00:30');
+			$slots = array();
+			$minutes_to_add = 30;
+			global $days;
+ 
+			for($i=1;$i<=48;$i++){
+				$slots[$i]['slot'] =  $time->format('h:i A').'-'.$time2->format('h:i A');
+				$slots[$i]['availability'] = 0;
+				$time->add(new DateInterval('PT' . $minutes_to_add . 'M'));
+				$time2->add(new DateInterval('PT' . $minutes_to_add . 'M'));
+			}
+		 	
+		 	if(isset($data[0])){
+				$row = $data[0];
+			       $tmp ="";
+			       $tmp2 = array();
+			       $tmp = $row['slots'];
+			       $tmp2 = explode('-', $tmp);
+			       if($tmp!=""){
+				       for($i=0;$i<count($tmp2);$i++){
+				           	 $slots[$tmp2[$i]]['availability']=2;			        
+				       }		       	
+			       }		 		
+		 	}
+		       		                          
+		 	$data= array();
+		 	$data['next']  = date('Y-m-d', strtotime($params['dt'] . ' +1 day'));
+		 	$data['prev']  = date('Y-m-d', strtotime($params['dt'] . ' -1 day'));
+		 	$data['dt']  = $params['dt'];
+		 	$data['user_id']    = $params['user_id'];
+		 	$data['doctor_id']  = $params['doctor_id'];
+		 	$data['clinic_id']  = $row['clinic_id'];
+		 	$data['day']  = strtoupper($day);
+		 	$data['slots'] = $slots;
+			echo json_encode($data);	
+		break;
+
+		case 'patient_doctor_search':
+			$obj = new Appointment();
+			$country_id  = $params['country_id'];
+			$state_id    = $params['state_id'];
+			$city_id     = $params['city_id'];
+			$specialties = $params['specialties'];
+			$data = $obj->patient_doctor_search($country_id, $state_id, $city_id, $specialties);
+			echo json_encode($data);
+		break;
 		case 'fill_patient_details_by_user_id':
 			$obj = new Patient();
-			$list = $obj->fill_user_details($params['id']);
+			
+			if(!isset($params['id'])){
+				$id = current_user();
+			}else{
+				$id = $params['id'];
+			}
+			$list = $obj->fill_my_patient_details($id);
 			echo json_encode($list[0]);
 		break;
 		case 'add_patient':
+				$user = array();
+				$user['username'] = $params['patient']['email'];
+				$user['email'] = $params['patient']['email'];
+				$user['password_text']= 'R@'.$params['patient']['first_name'].rand(12345678,88888888);
+				$user['password'] = md5($user['password_text']);
+				$user['password_hash'] = md5(todays_datetime().$params['patient']['email']);
+				$user['first_name'] = $params['patient']['first_name'];
+				$user['middle_name'] = $params['patient']['middle_name'];
+				$user['last_name'] = $params['patient']['last_name'];
+				$user['mobile_no_1'] = $params['patient']['mobile_no_1'];
+				$user['landline_no_1'] = $params['patient']['landline_no_1'];
+				$user['country_id'] = $params['patient']['country_id'];
+				$user['state_id'] = $params['patient']['state_id'];
+				$user['city_id'] = $params['patient']['city_id'];
+				$user['area_id'] = $params['patient']['area_id'];
+				$user['dob'] = $params['patient']['dob'];
+				$user['gender'] = $params['patient']['gender'];
+				$user['address'] = $params['patient']['address'];
+				$user['status'] = 1;
+				$user['clinic_id'] = clinic();
+				$user['rights'] = 'a:7:{s:5:"admin";s:1:"0";s:12:"clinic_admin";s:1:"0";s:6:"doctor";s:1:"0";s:7:"patient";s:1:"1";s:5:"nurse";s:1:"0";s:12:"receptionist";s:1:"0";s:11:"promo_agent";s:1:"0";}'; 
+				$obj = new Patient();
+
+			if(isset($params['self'])){
+					$user_id = $obj->update_user($user, array('id'=>$params['patient']['id']));
+					$json['msg'] = "You Have Successfully Updated Your Profile";
+					$json['status'] = true;	
+					echo json_encode($json);
+					exit;
+			}
+			else if(isset($params['patient']['id']) && $params['patient']['id']!=''){
+				$user_id = $obj->update_user($user, array('id'=>$params['patient']['id']));
+				$json['msg'] = "Patient Updated";
+				$json['status'] = true;				
+			}else{
+				$user_id = $obj->create_user($user);	
+				$patient = array();	
+				$patient['user_id']= $user_id;
+				$patient['clinic_id']= clinic();
+				$patient['owned_by']= clinic();
+				$patient['status']= 1;
+				$patient['created_by']= current_user();
+				$patient['created_on']= todays_datetime();
+				$res = $obj->create($patient);
+				$json['msg'] = "New Patient Added";
+				$json['status'] = true;					
+			}
+
+		/*
+
+Array
+(
+    [id] => 
+    [first_name] => Shashank
+    [middle_name] => D
+    [last_name] => Bhobe
+    [address] => Dhobitalao
+    [email_1] => kapilprabhudesai@gmail.com
+    [mobile_no_1] => 7303597100
+    [landline_1] => 
+    [country_id] => 1
+    [state_id] => 1
+    [city_id] => 1
+    [area_id] => 1
+    [dob] => 2016-04-01
+    [gender] => male
+    [landline_no_1] => 8322640092
+)
+<br />
+<b>Warning</b>:  trim() expects parameter 1 to be string, array given in <b>C:\xampp\htdocs\cubehms\classes\class.Database.php</b> on line <b>309</b><br />
+{"msg":"New Patient Added","status":true}
+
+user_id
+owned_by
+clinic_id
+status
+created_by
+created_on
+
+
+Array
+(
+    [id] => 
+    [first_name] => Praju
+    [middle_name] => S
+    [last_name] => Sutar
+    [address] => Dhobighat
+    [email_1] => akhbaba@gmail.com
+    [mobile_no_1] => 7303597100
+    [landline_1] => 8322640092
+    [country_id] => 1
+    [state_id] => 1
+    [city_id] => 1
+    [area_id] => 1
+    [dob] => 2016-04-05
+    [gender] => male
+)
+
+
+			$user['username'] = $params['form']['email'];
+			$user['email'] = $params['form']['email'];
+			$user['password'] = md5($params['form']['password']);
+			$user['password_text']= $params['form']['password'];
+			$user['password_hash'] = md5(todays_datetime().$params['form']['password']);
+
+
 			$params = $params['patient'];
+
 			if(isset($params['is_principal'])){
 				unset($params['id']);
 				unset($params['mobile_no_2']);
@@ -660,7 +838,7 @@ switch ($request_method){
 					$res = $obj->create($params);
 					$json['msg'] = "New Patient Added";
 					$json['status'] = true;				
-			}
+			}*/
 			echo json_encode($json);	
 		break;	
 		
@@ -711,6 +889,9 @@ switch ($request_method){
 	        if($params['role'] =='nurse' || $params['role'] =='receptionist'){
 	        	$my_clinics = $clinic->get_my_clinics_as_nurse_or_reception($_SESSION['id']);
 	        }
+	        if($params['role'] =='patient'){
+	        	$my_clinics = $clinic->get_my_clinics_as_patient($_SESSION['id']);
+	        }
 	        echo json_encode($my_clinics);		
 		break;
 
@@ -719,6 +900,11 @@ switch ($request_method){
 	        $clinic = new ManageClinics();
 	        $d = $clinic->get_clinic_data();
 	        $_SESSION['current_clinic_name'] = $d[0]['clinic_name'];
+	        if($_SESSION['current_role']=='patient'){
+	        	echo "patient_dashboard";
+	        }else{
+	        	echo "clinic_dashboard";
+	        }
 		break;		
 
 		case 'change_password':
@@ -986,10 +1172,11 @@ switch ($request_method){
 					unset($params['user_id']);
 					$user = array();
 					$params['password_text'] = 'N@'.$params['first_name'].rand(12345678,88888888);
-					$params['password'] = md5($params['password_text']);
+					$params['password'] = $params['password_text'];
 					$user['username'] = $params['email_1'];
 					$user['email'] = $params['email_1'];
 					$user['password'] = md5($params['password']);
+					$user['password_text'] = $params['password_text'];
 					$user['password_hash'] = md5(todays_datetime().$params['email_1']);
 					$user['first_name'] = $params['first_name'];
 					$user['middle_name'] = $params['middle_name'];
@@ -1052,6 +1239,7 @@ switch ($request_method){
 					
 					$email_string = http_build_query($email);
 					curl_mail($email_string);
+					SendSMS($user['mobile_no_1'], ' New : You are registered with us and added as Doctor to clinic '.current_clinic_name().', Username: '.$user['email'].' Password: '.$params['password_text']);	
 
 				}				
 			break;	
@@ -1227,8 +1415,6 @@ function role(){
     {
     	
     	$Message = "[CubeIHMS] ".$Message;
- 		$to = explode(' ', $to);
- 		$to = $to[1];
 		$sendsms =""; //initialize the sendsms variable
 		$param['To'] = $to;
 		$param['Message'] = $Message;

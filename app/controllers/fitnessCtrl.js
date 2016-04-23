@@ -172,10 +172,6 @@ $scope.printfc = function(json) {
 
     w.document.write('<hr />');
 
-    w.document.write('<b>');
-    w.document.write('Charges: INR '+charges);
-    w.document.write('</b>');
-
     w.document.write('</body>');
     w.document.write('</html>');
     w.window.print();

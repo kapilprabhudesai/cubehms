@@ -9,12 +9,12 @@
 	</tr>
 
 	<tr ng-repeat="p in patients">
-		<td>{{p.patient_id}}</td>
+		<td>{{p.user_id}}</td>
 		<td>{{p.name}}</td>
-		<td>{{p.email_1}}</td>
+		<td>{{p.email}}</td>
 		<td>{{p.mobile_no_1}}</td>
 		<td>
-		<a class="btn btn-info" href="#add_patient?id={{p.patient_id}}">Edit</a>
+		<a class="btn btn-info" href="#add_patient?id={{p.user_id}}">Edit</a>
 		</td>
 	</tr>
 </table>

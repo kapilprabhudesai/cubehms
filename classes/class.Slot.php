@@ -10,10 +10,7 @@ class Slot{
 	}
 
 	public function create_defaults($params){
-		$params['slot_1']="";
-		$params['slot_2']="";
-		$params['slot_3']="";
-		$params['slot_4']="";
+		$params['slots']="";
 		global $days;
 		foreach ($days as $day) {
 			$params['day']=$day;
@@ -31,6 +28,12 @@ class Slot{
 
 	public function update($params = array(), $search = array()){
 		return $this -> db -> updateDataIntoTable($params, $search, $this -> tableName);
+	}
+
+	public function fetch_slots($params){	
+		$sql = "select * from slots where day='".$params['day']."' and doctor_id='".$params['doctor_id']."' and user_id='".$params['user_id']."' and valid_till>='".$params['dt']."' and '".$params['dt']."'>='".date('Y-m-d')."'";
+		$this -> db -> query($sql);
+		return $this -> db -> getResultSet();
 	}
 }
 ?>

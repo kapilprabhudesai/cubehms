@@ -24,7 +24,7 @@ class ManageDoctors{
 	}
 
 	public function global_doctors($q){
-		$this -> db -> query("SELECT id, CONCAT_WS(' ', first_name, middle_name, last_name) as name  FROM ".$this->tableName." WHERE status=1 and user_id!='".current_user()."' and clinic_id!='".clinic()."' and (first_name like '".$q."%' or last_name like '".$q."%') GROUP BY user_id");
+		$this -> db -> query("SELECT id, CONCAT_WS(' ', first_name, middle_name, last_name) as name  FROM ".$this->tableName." WHERE status=1 and user_id!='".current_user()."' and clinic_id!='".clinic()."' and (first_name like '%".$q."%' or last_name like '%".$q."%' or mobile_no_1 like '%".$q."%' or email_1 like '%".$q."%') GROUP BY user_id");
 		return $this -> db -> getResultSet();
 	}	
 
@@ -34,7 +34,7 @@ class ManageDoctors{
 	}
 
 	public function fill_doctor_details_by_user_id($master_id){
-		$q = "SELECT dm.*, u.rights from ".$this->tableName." dm inner join users u on dm.user_id = u.id where dm.id = '".$master_id."' limit 1";
+		 $q = "SELECT dm.*, u.rights from ".$this->tableName." dm inner join users u on dm.user_id = u.id where dm.user_id = '".$master_id."' limit 1";
 		$this -> db -> query($q);
 		return $this -> db -> getResultSet();
 	}

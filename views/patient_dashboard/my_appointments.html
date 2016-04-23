@@ -1,0 +1,29 @@
+<h3>My Appointments</h3>
+<table class="table table-responsive">
+	<tr>
+		<th>Sr. No.</th>
+		<th>Name</th>
+		<th>Appointment Date</th>
+		<th>Clinic Name</th>
+		<th>Time</th>
+		<th>Confirmed By Doctor?</th>
+		<th>Clinic Mobile</th>
+		<th>Address</th>
+		<th>My Query</th>
+	</tr>
+
+	<tr ng-repeat="app in appointments track by $index">
+		<td>{{$index+1}}</td>
+		<td>{{app.doctor_name}}</td>
+		<td>{{app.appointment_date}}</td>
+		<td>{{app.clinic_name}}</td>
+		<td>{{app.slot_text}}</td>
+		<td>
+			<span ng-if="app.confirmed_by_doctor=='1'">Yes</span>
+			<span ng-if="app.confirmed_by_doctor=='0'">Not Yet</span>
+		</td>
+		<td>{{app.clinic_mobile}}</td>
+		<td>{{app.address}}</td>
+		<td>{{app.qry}}</td>		
+	</tr>
+</table>

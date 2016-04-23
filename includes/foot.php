@@ -62,6 +62,8 @@
     <script src="assets/javascripts/angular/angular-route.min.js"></script>
     <script src="app/controllers/clinicCtrl.js" type="text/javascript"></script>
     <script src="app/controllers/clinicDashboardCtrl.js" type="text/javascript"></script>
+    <script src="app/controllers/patientDashboardCtrl.js" type="text/javascript"></script>
+    <script src="app/controllers/patientSelfEditCtrl.js" type="text/javascript"></script>
     <script src="app/controllers/usersCtrl.js" type="text/javascript"></script>
     <script src="app/controllers/doctorsCtrl.js" type="text/javascript"></script>
     <script src="app/controllers/patientsCtrl.js" type="text/javascript"></script>
@@ -72,5 +74,7 @@
     <script src="app/controllers/referralsCtrl.js" type="text/javascript"></script>
     <script src="app/controllers/fitnessCtrl.js" type="text/javascript"></script>
     <script src="app/controllers/inventoryCtrl.js" type="text/javascript"></script>
+    <script src="app/controllers/patientsAppointmentsCtrl.js" type="text/javascript"></script>
+    
   </body>
 </html>

@@ -54,7 +54,7 @@
                         <span ng-show="forgotForm.email.$error.required">Please Enter Your Email</span>
                       </div>
                     </div>
-                    <button type="submit" ng-disabled="!forgotForm.$valid" class='btn btn-success btn-block'>Reset Password</button>
+                    <button type="submit" ng-disabled="!forgotForm.$valid" class='btn btn-success btn-block'>Recover My Password</button>
                   </form>
                   <div class='text-center'>
                     <hr class='hr-normal'>

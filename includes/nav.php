@@ -1,6 +1,30 @@
 <div id='main-nav-bg'></div>
       <nav class='main-nav-fixed' id='main-nav'>
         <div class='navigation'>
+          <?php if($_SESSION['current_role']=='patient'): ?>
+            <ul class='nav nav-stacked'>
+              <li class=''>
+                <a href='#/patient_dashboard'>
+                  <i class='icon-dashboard'></i>
+                  <span>Dashboard</span>
+                </a>
+              </li>
+              <li class=''>
+                <a href="#/edit_me"><i class='icon-user'></i>
+                <span>Edit Profile</span>
+                </a>
+              </li>
+
+              <li class=''>
+                <a href="#/my_appointments"><i class='icon-stethoscope'></i>
+                <span>My Appointments</span>
+                </a>
+              </li>
+
+            </ul>  
+          <?php endif; ?>
+
+          <?php if($_SESSION['current_role']!='patient'): ?>
           <ul class='nav nav-stacked'>
             <li class=''>
               <a href='#/clinic_dashboard'>
@@ -74,6 +98,7 @@
             </li>
             <?php endif; ?>
           </ul>
+          <?php endif; ?>
         </div>
       </nav>
       <section id='content'>

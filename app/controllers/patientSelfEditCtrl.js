@@ -1,5 +1,5 @@
 'use strict';
-app.controller('patientsCtrl', function($scope, $http, $routeParams) {
+app.controller('patientSelfEditCtrl', function($scope, $http, $routeParams) {
 
 	$scope.countries = [];
 	$scope.states = [];
@@ -47,23 +47,7 @@ app.controller('patientsCtrl', function($scope, $http, $routeParams) {
     }
 
 
-	$scope.load_patients = function(){
-		var params =  {
-		        action: "get_all_my_patients",
-		    };
-		var serializedData = $.param(params);
-	    $http({
-	        url: CMS_PATH+"inc/functions.php",
-	        method: "POST",
-	        data: serializedData
-	    })
-	    .then(function(res){
-	    	$scope.patients = res.data;
-	    	console.log($scope.patients);
-	    }, function(){
-
-	    });	
-	}
+ 
 	$scope.patient = {
 		id:'',
 		first_name:'',
@@ -81,11 +65,12 @@ app.controller('patientsCtrl', function($scope, $http, $routeParams) {
 		gender:''
 	};
 
-	$scope.save2 = function(){
+	$scope.save = function(){
 		$scope.patient.dob = $("#dob").val();
 		var params =  {
 		        action: "add_patient",
-		        patient:$scope.patient
+		        patient:$scope.patient,
+		        self:true
 		    };
 		var serializedData = $.param(params);
 	    $http({
@@ -97,7 +82,7 @@ app.controller('patientsCtrl', function($scope, $http, $routeParams) {
  
 	    	if(res.data.status == true){
 	    		$("#save").remove();
-	    		setTimeout(function(){location.href="#manage_patients";},2000);
+	    		setTimeout(function(){location.href="#patient_dashboard";},2000);
 	    	}
 	    	$.jGrowl(res.data.msg);
 	    }, function(){
@@ -105,72 +90,8 @@ app.controller('patientsCtrl', function($scope, $http, $routeParams) {
 	    });		
 	}
 	
-	$scope.save = function(){
-		if($routeParams.id !== undefined){
-			if($scope.patient.owned_by=='0' || $scope.patient.owned_by==0){
-				var params =  {
-				        action: "otp_patient_edit",
-				        id:$scope.patient.id,
-				        otp:'1239'
-				    };
-				var serializedData = $.param(params);
-			    $http({
-			        url: CMS_PATH+"inc/functions.php",
-			        method: "POST",
-			        data: serializedData
-			    })
-			    .then(function(res){
-		 
-			    }, function(){
-
-			    });	
-
-			    var y = window.prompt("Enter OTP received by patient","");	
-			    if(y=='1239'){
-			    	$scope.save2();
-			    }else{
-			    	alert("wrong OTP.");
-			    }		
-			}else{
-				$scope.save2();
-			}
-		}else{
-			$scope.save2();
-		}	
-
-
-	}
-
-
-	$scope.init  = function(){
-		var params =  {
-		        action: "get_clinic_details",
-		    };
-		var serializedData = $.param(params);
-	    $http({
-	        url: CMS_PATH+"inc/functions.php",
-	        method: "POST",
-	        data: serializedData
-	    })
-	    .then(handleSuccess, handleError);		
-	    function handleSuccess(res){
-	    	$scope.clinic = res.data;
-	    	$scope.patient.country_id = $scope.clinic.country_id;
-	    	$scope.patient.state_id = $scope.clinic.state_id;
-	    	$scope.patient.city_id = $scope.clinic.city_id;
-	    	$scope.patient.area_id = $scope.clinic.area_id;
-	    	$scope.get_countries();
-	    }
-
-	    function handleError(err){
-	    	
-	    }
-	}
-    setTimeout(function(){
-    		//$("select").select2({}); 
-	}, 1000);
-
-	$scope.init();
+	
+ 
 	
 	$scope.get_countries = function(){
 		var params =  {
@@ -260,14 +181,11 @@ app.controller('patientsCtrl', function($scope, $http, $routeParams) {
 	});  
 	
 
-	$scope.load_patients();
-
 
 
 	$scope.load_patient = function(id){
 		var params =  {
-		        action: "fill_patient_details_by_user_id",
-		        id:id
+		        action: "fill_patient_details_by_user_id"
 		    };
 		var serializedData = $.param(params);
 	    $http({
@@ -282,10 +200,7 @@ app.controller('patientsCtrl', function($scope, $http, $routeParams) {
 
 	    });	
 	}
-	if($routeParams.id !== undefined){
-		$scope.load_patient($routeParams.id);
-	}
-	
+ 
 
     $scope.validate_mobile_no = (function() {
         var regexp = /^\d{10}$/;
@@ -295,23 +210,9 @@ app.controller('patientsCtrl', function($scope, $http, $routeParams) {
             }
         };
     })();
-
-$(document).ready(function () {
-    $("#global_patients").tokenInput(CMS_PATH+"inc/functions.php?action=global_patients",{
-    	minChars:2,tokenLimit:1,
-    	onAdd:function(item){
-    		$scope.load_patient(item.id);
-    	},
-        onDelete:function(item){
-            location.reload();
-        }
-    });
-});	
-
-	$scope.load_doctor = function(id){
+	$scope.init  = function(){
 		var params =  {
-		        action: "fill_doctor_details_by_user_id",
-		        id:id
+		        action: "get_clinic_details",
 		    };
 		var serializedData = $.param(params);
 	    $http({
@@ -319,27 +220,26 @@ $(document).ready(function () {
 	        method: "POST",
 	        data: serializedData
 	    })
-	    .then(function(res){
+	    .then(handleSuccess, handleError);		
+	    function handleSuccess(res){
+	    	$scope.clinic = res.data;
+	    	$scope.patient.country_id = $scope.clinic.country_id;
+	    	$scope.patient.state_id = $scope.clinic.state_id;
+	    	$scope.patient.city_id = $scope.clinic.city_id;
+	    	$scope.patient.area_id = $scope.clinic.area_id;
+	    	$scope.get_countries();
+	    }
 
-	    	$scope.patient = res.data;
-	    	console.log($scope.doctor);
-	    }, function(){
-
-	    });	
+	    function handleError(err){
+	    	
+	    }
 	}
+    setTimeout(function(){
+    		//$("select").select2({}); 
+	}, 1000);
 
-
-$(document).ready(function () {
-    $("#global_doctors").tokenInput(CMS_PATH+"inc/functions.php?action=global_doctors",{
-    	minChars:2,tokenLimit:1,
-    	onAdd:function(item){
-    		$scope.load_doctor(item.id);
-    	},
-        onDelete:function(item){
-            location.reload();
-        }
-    });
-});	
+	$scope.init();
+$scope.load_patient();
 	$(document).ready(function(){
         $('#datetimepicker1').datetimepicker({pickTime:false, format:'YYYY-MM-DD'});
 	});

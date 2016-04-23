@@ -41,14 +41,14 @@
 
             <div class='form-group'>
               <label>Mobile No<font style="color:red">*</font></label>
-              <input class="form-control" placeholder="+91 9673173727" id="mobile_no_1" name="mobile_no_1" ng-model="clinic.mobile_no_1" ng-keyup="is_unique_mobile()" type="text" required  ng-pattern="validate_mobile_no">
+              <input class="form-control" placeholder="9XXXXXXXXX" id="mobile_no_1" name="mobile_no_1" ng-model="clinic.mobile_no_1" ng-keyup="is_unique_mobile()" type="text" required  ng-pattern="validate_mobile_no">
               <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.required">Mobile Number Is Mandatory</span>
               <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.pattern"><br>Invalid Mobile No</span>
               <span style="color:#b94a48" ng-if="myForm.mobile_no_1.$error.unique_mobile && myForm.mobile_no_1.$dirty">Mobile No Already Registered</span>
             </div>
             <div class='form-group'>
               <label>Mobile No 2</label>
-              <input class="form-control"  ng-keyup="is_unique_mobile2()" placeholder="+91 9673173727" id="mobile_no_2" name="mobile_no_2" ng-model="clinic.mobile_no_2" type="text"  ng-pattern="validate_mobile_no">
+              <input class="form-control"  ng-keyup="is_unique_mobile2()" placeholder="9XXXXXXXXX" id="mobile_no_2" name="mobile_no_2" ng-model="clinic.mobile_no_2" type="text"  ng-pattern="validate_mobile_no">
               <span style="color:red" ng-if="myForm.mobile_no_2.$error.pattern"><br>Invalid Mobile No</span>
                <span style="color:#b94a48" ng-if="myForm.mobile_no_2.$error.unique_mobile2 && myForm.mobile_no_2.$dirty">Mobile No Already Registered</span>
             </div>

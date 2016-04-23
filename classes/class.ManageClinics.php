@@ -61,6 +61,11 @@ class ManageClinics{
 		 $this -> db -> query("select clinic_id as id, clinic_name as name from doctor_master inner join clinic_master on doctor_master.clinic_id = clinic_master.id where user_id='".$id."' and is_principal='No'", 'users');
 		 return $this -> db -> getResultSet();
 	}
+
+	public function get_my_clinics_as_patient($id){
+		 $this -> db -> query("SELECT clinic_id AS id, clinic_name AS name FROM patient_master INNER JOIN clinic_master ON patient_master.clinic_id = clinic_master.id WHERE	user_id = '".$id."'", 'users');
+		 return $this -> db -> getResultSet();
+	}	
 	
 	public function get_my_clinics_as_nurse_or_reception($id){
 		 $this -> db -> query("select clinic_id as id, clinic_name as name from users inner join clinic_master on users.clinic_id = clinic_master.id where users.id='".$id."'", 'users');

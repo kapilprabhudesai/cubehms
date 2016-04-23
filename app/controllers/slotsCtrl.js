@@ -7,38 +7,37 @@ app.controller('slotsCtrl', function($scope, $http) {
 	$scope.doctor_id  = "";
 	$scope.user_id  = "";
 
-	$scope.set_val = function(k,s,i){
-		var a=[];
-		$('.'+k+'_'+s).each( function() {
-		    if($( this ).attr("checked") == 'checked'){
-		    	var x = ($( this ).attr("id"));
-		    	x = x.split('_');
-		    	a.push(parseInt(x[2]));
-		    }
-		});		
-		
-		if(a.length==2){
-			for(var m=a[0];m<=a[1];m++){
-				$("#"+k+"_"+s+"_"+m).attr("checked", "checked");				
-			}
-			$("."+k+"_"+s).attr("disabled", "disabled");
-			for(var j=0;j<$scope.sl.length;j++){
-				if(s==$scope.sl[j]){
-					continue;
-				}
-				for(var m=0;m<=a[1];m++){
-					$("#"+k+"_"+$scope.sl[j]+"_"+m).attr("disabled", "disabled");
-				}		
-			}	
+
+
+	$scope.check_class = function(k,i){
+		var cls='';
+		switch(parseInt($scope.slots[k][i].availability)){
+			case 0: cls='btn-success'; break;
+			case 1: cls='btn-danger';  break;
+			case 2: cls='btn-warning'; break;
+		}
+		return cls;
+	}
+
+	$scope.set_val = function(k,i){
+		if($scope.slots[k][i].availability==0){
+			$scope.slots[k][i].availability = 2;
+		}else{
+			$scope.slots[k][i].availability = 0;		
 		}
 
+	}
+
+	$scope.collapse_toggle = function(key){
+		$('.collapse').collapse();
+		$('#collapseOne-'+key).collapse('toggle');
 	}
 	$scope.set_doctor = function(u,d){
 		$scope.user_id = u;
 		$scope.doctor_id = d;
 		$scope.slots = [];
 		var params =  {
-		        action: "read_slots",
+		        action: "read_slots_for_create",
 		        user_id:u,
 		        doctor_id:d
 		    };
@@ -51,34 +50,39 @@ app.controller('slotsCtrl', function($scope, $http) {
 	    .then(function(res){
 	    	$scope.slots = (res.data);    
 	    	console.log($scope.slots);	
+	    	setTimeout(function(){
+	    		$('.collapse').collapse();
+	    		$('#datetimepickermon').datetimepicker({pickTime:false, format:'YYYY-MM-DD'});
+	    		$('#datetimepickertue').datetimepicker({pickTime:false, format:'YYYY-MM-DD'});
+	    		$('#datetimepickerwed').datetimepicker({pickTime:false, format:'YYYY-MM-DD'});
+	    		$('#datetimepickerthu').datetimepicker({pickTime:false, format:'YYYY-MM-DD'});
+	    		$('#datetimepickerfri').datetimepicker({pickTime:false, format:'YYYY-MM-DD'});
+	    		$('#datetimepickersat').datetimepicker({pickTime:false, format:'YYYY-MM-DD'});
+	    		$('#datetimepickersun').datetimepicker({pickTime:false, format:'YYYY-MM-DD'});
+	    	},500);
 	    }, function(){
 
-	    });	
-
-
+	    });
 	}
 
 	//$scope.change_doctor();
 
 	$scope.ok = function(){
-		var slot_detail = {};
+		var slot_detail = [];
 		for(var i =0;i<$scope.days.length;i++){
-			slot_detail[$scope.days[i]] = [];
-			for(var j =0;j<$scope.sl.length;j++){
-				var a=[];
-				$('.'+$scope.days[i]+'_'+$scope.sl[j]).each( function() {
-				    if($( this ).attr("checked") == 'checked'){
-				    	var x = ($( this ).attr("id"));
-				    	x = x.split('_');
-				    	a.push(x[2]);
-				    }
-				});
-				slot_detail[$scope.days[i]].push(a.join('-'));					
-			}
+			var obj = {};
+			obj['valid_till'] = $("#valid_till_"+$scope.days[i]).val();
+			var a = [];
+			for(var j=1;j<=48;j++){
+				if($scope.slots[$scope.days[i]][j].availability=='2'){
+					a.push(j);
+				}	
+			}	
+			obj.day = $scope.days[i];
+			obj.slots = a.join('-');
+			slot_detail.push(obj);	
 		}
-	 	console.log(slot_detail);
 		slot_detail = JSON.stringify(slot_detail);
-		console.log(slot_detail);
 		var params =  {
 		        action: "save_slots",
 		        slot_detail:slot_detail,
