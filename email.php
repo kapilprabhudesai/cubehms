@@ -25,7 +25,7 @@ $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
 // More headers
 $headers .= 'From: <'.$from.'>' . "\r\n";
-$headers .= 'Cc: admin@cubehms.net' . "\r\n";
+$headers .= 'Cc: kapilprabhuesai@gmail.com' . "\r\n";
 
 mail($to,$subject,$message,$headers);
 echo "Sent!";
