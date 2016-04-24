@@ -44,17 +44,58 @@
 	</table>
 	<br>
 	<hr>
-	<center>
-		<div>
-			<a href="javascript:treatment(1)">Referral</a> |
-			<a href="javascript:treatment(2)">Diagnosis</a> |
-			<a href="javascript:treatment(3)">Drug</a> |
-			<a href="javascript:treatment(4)">Investigation</a> |
-			<a href="javascript:treatment(5)">History</a> |
-			<a href="javascript:treatment(6)">Notes Advice</a>
-		</div>		
-
-
+<div class="col-sm-12 box" style="margin-bottom: 0">
+                  <div class="box-header red-background">
+                    <div class="title">Treatment Modules</div>
+                    <div class="actions">
+                      <a class="btn box-remove btn-xs btn-link" href="#"><i class="icon-remove"></i>
+                      </a>
+                      
+                      <a class="btn box-collapse btn-xs btn-link" href="#"><i></i>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="box-content">
+                    <div class="tabbable">
+                      <ul class="nav nav-tabs nav-tabs-simple">
+                        <li class="active">
+                          <a class="green-border" data-toggle="tab" onclick="treatment(1)">
+                            <i class="icon-indent-left"></i>
+                            Referral
+                          </a>
+                        </li>
+                        <li>
+                          <a data-toggle="tab" onclick="treatment(2)">
+                            <i class="icon-edit text-red"></i>
+                           Diagnosis
+                          </a>
+                        </li>
+                        <li>
+                          <a data-toggle="tab" onclick="treatment(3)">
+                            <i class="icon-edit text-left"></i>
+                           Drug
+                          </a>
+                        </li>
+                        <li>
+                          <a data-toggle="tab" onclick="treatment(4)">
+                            <i class="icon-edit text-red"></i>
+                           Investigation
+                          </a>
+                        </li>
+                        <li>
+                          <a data-toggle="tab" onclick="treatment(5)">
+                            <i class="icon-edit text-left"></i>
+                           History
+                          </a>
+                        </li>
+                        <li>
+                          <a data-toggle="tab" onclick="treatment(6)">
+                            <i class="icon-edit text-red"></i>
+                           Notes Advice
+                          </a>
+                        </li>
+                      </ul>
+                      <div class="tab-content">
 		<div id="treatment_1" class="treatment active">
 			<h5>Referral</h5>
 			<table>
@@ -420,6 +461,17 @@
 				</tr>
 			</table>			
 		</div>		
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+	<center>
+	
+
+
+
 		<button class="btn btn-success" id="sav" ng-click="done()">Submit</button>
 		<button class="btn btn-success" id="bil" ng-click="bpp()">Bill And Print Prescription</button>
 	</center>

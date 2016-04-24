@@ -1,8 +1,12 @@
 'use strict';
 app.controller('manageCtrl', function($scope, $http, $routeParams) {
 
+    start_spinner();
 	$scope.appointment_id = "";
 
+    $scope.set_tab = function(tab){
+        $("#"+tab).tab('show');
+    }
 	if($routeParams.aid !== undefined){
 		$scope.appointment_id = $routeParams.aid;
 	}	
@@ -670,6 +674,7 @@ $scope.change_fee = function(id){
                 $scope.all_investigations[res.data[i].id] = res.data[i].name;    
             }
             $("select").select2();
+            stop_spinner();
         }, function(){
 
         });         
