@@ -30,13 +30,13 @@
 		<tr>
 			<th>Select Fees Type:</th>
 			<th>
-		              <select ng-change="change_fee(this)" required class="select2 form-control" id="selected_fee" ng-model="treatment.selected_fee">
+		              <select ng-change="change_fee(this)" required class="form-control" id="selected_fee" ng-model="treatment.selected_fee">
 		              <option value="">Choose...</option>
 		              <option ng-repeat="(key,value) in fees" value="{{key}}" ng-selected="{{key == treatment.selected_fee}}">{{value.name}}</option>
 		              </select>
 			</th>
-			<th>Amount:</th><th><input size="5" ng-model="treatment.amount" type="text"></th>
-			<th>%(Sharing Amount):</th><th><input ng-model="treatment.sharing_amount" size="5" type="text"></th>
+			<th>Amount:</th><th><input size="5" id="amt" ng-model="treatment.amount" type="text"></th>
+			<th>%(Sharing Amount):</th><th><input id="samt" ng-model="treatment.sharing_amount" size="5" type="text"></th>
 			<th>High BP:</th><th><input size="5" ng-model="treatment.high_bp" type="text"></th>
 			<th>Low BP:</th><th><input size="5" ng-model="treatment.low_bp" type="text"></th>
 			<th>Pulse:</th><th><input size="5" ng-model="treatment.pulse" type="text"></th>
@@ -107,11 +107,8 @@
 		              <option ng-repeat="(key,value) in referral_clinics" value="{{key}}" ng-selected="{{key == register.referral_id}}">{{value}}</option>
 		              </select>
 					</td>
-				</tr>
-				<tr>
 					<th>Comment<font style="color:red">*</font></th><td><textarea class="form-control" ng-model="referral_comment"></textarea></td>
-				</tr>	
-				<tr>
+
 					<td colspan="2" align="right">
 						<button class="btn btn-danger" ng-click="reset_referral()">Reset</button>
 						<span ng-if="referral_edit==-1"><button class="btn btn-success" ng-click="add_referral()">Add</button></span>
@@ -147,29 +144,23 @@
 		              <option ng-repeat="(key,value) in icd10" value="{{key}}" ng-selected="{{key == icd10_id}}">{{value}}</option>
 		              </select>					
 					</td>
-				</tr>
-
-				<tr>
 					<th>Dignosis<font style="color:red">*</font></th>
 					<td>
 		              <select required  class="select2 form-control" id="diagnosis_id" ng-model="diagnosis_id">
 		              <option value="">Choose...</option>
 		              <option ng-repeat="(key,value) in diagnosis" value="{{key}}" ng-selected="{{key == diagnosis_id}}">{{value}}</option>
+		            </td>
+		            <td>
 		              </select>
 						<i ng-click="trigger_new_modal('diagnosis','Diagnosis')" class="icon-plus-sign pull-right">Add New Diagnosis</i>
 						<br/>		              
 					</td>
 				</tr>
 
-				<tr>
+				<tr>					
 					<th>Other Diagnosis<font style="color:red">*</font></th><td><textarea class="form-control" ng-model="diagnosis_other_comment"></textarea></td>
-				</tr>
 
-				<tr>
 					<th>Comment</th><td><textarea class="form-control" ng-model="diagnosis_comment"></textarea></td>
-				</tr>	
-
-				<tr>
 					<td></td>
 					<td colspan="" align="right">
 						<button class="btn btn-danger" ng-click="diagnosis_reset()">Reset</button>
@@ -290,11 +281,7 @@
 						<i ng-click="trigger_new_modal('investigation','Investigation')" class="icon-plus-sign pull-right">Add New Investigation</i>
 						<br/>
 					</td>
-				</tr>
-				<tr>
 					<th>Remark</th><td><textarea class="form-control" ng-model="investigation_remark"></textarea></td>
-				</tr>	
-				<tr>
 					<th>Referred Lab<font style="color:red">*</font></th>
 					<td>
 						<select required  class="select2 form-control" id="investigation_ref" ng-model="investigation_ref">
@@ -302,8 +289,6 @@
 						<option ng-repeat="(key,value) in referral_clinics" value="{{key}}" ng-selected="{{key == investigation_ref}}">{{value}}</option>
 						</select>							
 					</td>
-				</tr>				
-				<tr>
 					<td colspan="2" align="right">
 						<button class="btn btn-danger" ng-click="investigation_reset()">Reset</button>
 						<span ng-if="investigation_edit==-1"><button class="btn btn-success" ng-click="add_investigation()">Add</button></span>
@@ -352,9 +337,7 @@
 									<option ng-repeat="(key,value) in allergy_types" value="{{key}}" ng-selected="{{key == allergy_type_id}}">{{value}}</option>
 									</select>										
 								</td>
-							</tr>
 
-							<tr>
 								<th>Generic Name</th>
 								<td>
 									<select required  class="select2 form-control" id="allergy_generic_name_id" ng-model="allergy_generic_name_id">
@@ -362,9 +345,6 @@
 									<option ng-repeat="(key,value) in allergy_generic_names" value="{{key}}" ng-selected="{{key == allergy_generic_name_id}}">{{value}}</option>
 									</select>										
 								</td>
-							</tr>
-
-							<tr>
 								<th>Drug Name</th>
 								<td>
 									<select required  class="select2 form-control" id="allergy_drug_name_id" ng-model="allergy_drug_name_id">
@@ -372,16 +352,10 @@
 									<option ng-repeat="(key,value) in allergy_drug_names" value="{{key}}" ng-selected="{{key == allergy_drug_name_id}}">{{value}}</option>
 									</select>										
 								</td>
-							</tr>	
-
-							<tr>
 								<th>Other</th>
 								<td>
 									<input type="text" class="form-control" ng-model="allergy_other">								
 								</td>
-							</tr>																			
-
-							<tr>
 								<th>Reaction</th>
 								<td>
 									<input type="text" class="form-control" ng-model="allergy_reaction">	
@@ -430,14 +404,12 @@
 					<td>
 						<textarea class="form-control" ng-model="note"></textarea>
 					</td>
-				</tr>
-				<tr>
+
 					<th>Advice</th>
 					<td>
 						<textarea class="form-control" ng-model="advice"></textarea>
 					</td>
-				</tr>	
-				<tr>
+			
 					<td colspan="2" align="right">
 						<button class="btn btn-danger" ng-click="na_reset()">Reset</button>
 						<span ng-if="na_edit==-1"><button class="btn btn-success" ng-click="add_notes()">Add</button></span>
@@ -482,5 +454,8 @@
 	}
 	.treatment.active{
 		display: block;
+	}
+	.btn{
+		width: 70px!important;
 	}
 </style>	

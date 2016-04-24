@@ -140,8 +140,18 @@ app.controller('manageCtrl', function($scope, $http, $routeParams) {
       }, function(){});    
   }
 
+$( "#selected_fee" ).change(function() {
+    var id = $(this).val();
+    $scope.treatment.selected_fee = id;
+    console.log($scope.fees);
+    $("#amt").val($scope.fees[id].fee);
+    $("#samt").val( $scope.fees[id].per);
+    $scope.treatment.amount = $scope.fees[id].fee;
+    $scope.treatment.sharing_amount = $scope.fees[id].per;    
+});  
 
 $scope.change_fee = function(id){
+
  $scope.treatment.amount = $scope.fees[$scope.treatment.selected_fee].fee;
  $scope.treatment.sharing_amount = $scope.fees[$scope.treatment.selected_fee].per;
 }
@@ -561,12 +571,12 @@ $scope.change_fee = function(id){
             data: serializedData
         })
         .then(function(res){
-            console.log(res.data);
+            console.log("kapil",res.data);
             $scope.doctor = res.data.doctor;
             $scope.patient = res.data.patient;
               
              $scope.fees['doctor_fees'] = {name:'Doctor Fees', fee:res.data.doctor.doctor_fees, per:res.data.doctor.doctor_fees_per};
-             $scope.fees['doctor_procedure_charge'] = {name:'Doctor Procedure Charge', fee:res.data.doctor.doctor_procedure_charge, per:res.data.doctor_procedure_charge_per};
+             $scope.fees['doctor_procedure_charge'] = {name:'Doctor Procedure Charge', fee:res.data.doctor.doctor_procedure_charge, per:res.data.doctor.doctor_procedure_charge_per};
              $scope.fees['special_fees'] = {name:'Special Fees', fee:res.data.doctor.special_fees, per:res.data.doctor.special_fees_per};
              if(JSON.parse(decodeURIComponent(res.data.investigation))!=null){
                  $scope.treatment = JSON.parse(decodeURIComponent(res.data.investigation));                
