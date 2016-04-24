@@ -191,7 +191,7 @@ $scope.printslip = function(json) {
 	var d = new Date(json.created_on);
 	w.document.write('<tr><th>Registration Date</th><td>'+d.toDateString()+'</td>');
 	w.document.write('<tr><th>Patient Name</th><td>'+name+'</td>');
-	w.document.write('<tr><th>Contact No</th><td>'+json.mobile_no_1+', '+json.landline_1+'</td>');
+	w.document.write('<tr><th>Contact No</th><td>'+json.mobile_no_1+'</td>');
 	var dob = new Date(json.dob);
 	var today = new Date();
 	w.document.write('<tr><th>DOB</th><td>'+dob.toDateString()+'</td>');
