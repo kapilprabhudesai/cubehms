@@ -2,7 +2,7 @@
 app.controller('appointmentsCtrl', function($scope, $http, $routeParams) {
 	$scope.patient = {};
 	  	$scope.sl = ['A','B','C','D'];
-		$scope.days = [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+		$scope.days = [ 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 	$scope.unconfirmed = 0;
 	$scope.my_appointments = [];
 	$scope.get_my_appointments = function(){
@@ -110,7 +110,7 @@ app.controller('appointmentsCtrl', function($scope, $http, $routeParams) {
 		var dt = document.getElementById("doa").value;
 		var d = new Date(dt);
 		var doctor_id=$( "#doctor_id" ).val();
-		$scope.selected_day = ($scope.days[d.getDay()-1]);
+		$scope.selected_day = ($scope.days[d.getDay()]);
 		$scope.slots = $scope.doctor_slots[$scope.selected_day];
 		$scope.search_params.doctor_id = doctor_id;
 		$scope.search_params.appointment_date = dt;
