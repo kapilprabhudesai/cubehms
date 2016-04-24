@@ -86,7 +86,7 @@ class Appointment{
 		if($specialties!=null){
 			$where .=" and dm.specialties in(".$specialties.")";
 		}
-		$sql = "SELECT dm.id as doctor_master_id, dm.user_id, cm.clinic_name, concat_ws(' ',u.first_name,u.last_name) AS doctor_name, cm.address, city_master.name as city, state_master.name as state, cm.mobile_no_1, cm.landline_1 FROM doctor_master dm INNER JOIN users u ON dm.user_id = u.id INNER JOIN clinic_master cm ON dm.clinic_id = cm.id INNER JOIN city_master ON cm.city_id = city_master.id INNER JOIN state_master ON cm.state_id = state_master.id where u.status=1 ".$where;
+		$sql = "SELECT dm.specialties, dm.id as doctor_master_id, dm.user_id, cm.clinic_name, concat_ws(' ',u.first_name,u.last_name) AS doctor_name, cm.address, city_master.name as city, state_master.name as state, cm.mobile_no_1, cm.landline_1 FROM doctor_master dm INNER JOIN users u ON dm.user_id = u.id INNER JOIN clinic_master cm ON dm.clinic_id = cm.id INNER JOIN city_master ON cm.city_id = city_master.id INNER JOIN state_master ON cm.state_id = state_master.id where u.status=1 ".$where;
 		$this -> db -> query($sql);
 		return $this -> db -> getResultSet();		
 	}

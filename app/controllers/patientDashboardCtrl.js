@@ -104,6 +104,7 @@ app.controller('patientDashboardCtrl', function($scope, $http, $routeParams) {
 
 
 	$scope.specialties = [];
+	$scope.specialties_keys = {};
 	$scope.selected_specialties="";
 
 	$scope.check_if_specialty_selected = function(id){
@@ -126,6 +127,9 @@ app.controller('patientDashboardCtrl', function($scope, $http, $routeParams) {
 	        data: serializedData
 	    })
 	    .then(function(res){
+	    	for(var i=0;i<res.data.length;i++){
+	    		$scope.specialties_keys[res.data[i].id] = res.data[i].name;
+	    	}
 	    	$scope.specialties = res.data;
 	    	$("select").select2();
 	    }, function(){});		
@@ -160,7 +164,13 @@ $( "#specialties" ).change(function() {
 	        data: serializedData
 	    })
 	    .then(function(res){
-	    	$scope.searched_doctors =res.data;
+	    	var data = res.data;
+	    	for(var i=0;i<data.length;i++){
+	    		console.log(data[i]);
+	    		var x = data[i].specialties.split(',');
+	    		data[i].specs = x;
+	    	}
+	    	$scope.searched_doctors =data;
 	    }, function(){});		
 	}
 

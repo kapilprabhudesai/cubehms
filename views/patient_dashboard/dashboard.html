@@ -86,11 +86,8 @@
             </h4>
             <span class="clearfix"></span>
             <p style="float:left">
-              <b>Specialities</b>Ortho, Gyno Poco
+              <b>Specialities</b><i ng-repeat="s in rec.specs">{{specialties_keys[s]}}, </i>
             </p>
-            <p style="float:left">
-              <b>Available On &nbsp;:&nbsp;</b>Mon, Tue, Wed, Thu, Fri, Sat, Sun
-            </p> 
             <span class="clearfix"></span>
             <p>
               <b>Contact Address:</b>{{rec.address}}, {{rec.city}} - {{rec.state}}
